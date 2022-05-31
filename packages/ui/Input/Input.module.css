@@ -1,0 +1,50 @@
+.formControl {
+  @apply relative flex w-full max-w-full flex-col pb-6;
+}
+
+.label {
+  @apply flex 
+    cursor-pointer 
+    select-none
+    items-center justify-between 
+    px-1 py-2 
+    text-sm
+    font-medium
+    text-stone-900;
+}
+
+.label:hover {
+  @apply text-opacity-80;
+}
+
+.input {
+  @apply block 
+  w-full 
+  rounded-lg border 
+  border-stone-300 
+  bg-stone-100 px-4 
+  py-2
+  text-stone-900
+  ring-offset-1
+  disabled:cursor-not-allowed;
+}
+
+.primary {
+  @apply focus:ring-primary-500
+  focus:border-primary-50 
+  focus:outline-primary-500
+  focus:ring-offset-primary-500;
+}
+
+.error {
+  @apply focus:ring-offset-primary-500 
+  animate-wiggle 
+  border-red-500 
+  focus:border-red-50 
+  focus:outline-red-500
+  focus:ring-red-500;
+}
+
+.errorText {
+  @apply text-xs font-semibold text-red-500;
+}

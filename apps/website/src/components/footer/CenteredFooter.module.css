@@ -1,0 +1,11 @@
+.navbar {
+  @apply mt-5 flex flex-row justify-center font-medium text-xl text-stone-800;
+}
+
+.footer-logo {
+  @apply flex w-full justify-center;
+}
+
+.navbar :global(li) {
+  @apply mx-4;
+}

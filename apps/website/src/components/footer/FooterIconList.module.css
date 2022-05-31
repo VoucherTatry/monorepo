@@ -1,0 +1,19 @@
+.footer-icon-list {
+  @apply flex flex-wrap;
+}
+
+.footer-icon-list :global(a:not(:last-child)) {
+  @apply mr-3;
+}
+
+.footer-icon-list :global(a) {
+  @apply text-stone-500;
+}
+
+.footer-icon-list :global(a:hover) {
+  @apply text-stone-700;
+}
+
+.footer-icon-list :global(svg) {
+  @apply fill-current w-5 h-5;
+}

@@ -1,0 +1,13 @@
+query Regulamin {
+  regulamin {
+    data {
+      attributes {
+        sekcja {
+          id
+          tytul
+          opis
+        }
+      }
+    }
+  }
+}

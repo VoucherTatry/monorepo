@@ -1,0 +1,30 @@
+.btn {
+  @apply bg-primary-500 
+  inline-flex 
+  max-w-full 
+  shrink-0 cursor-pointer 
+  select-none flex-wrap items-center 
+  justify-center 
+  rounded-lg 
+  border-transparent 
+  px-4 py-3 
+  text-center 
+  font-semibold 
+  text-stone-50
+  transition-all 
+  duration-200 
+  ease-in-out;
+}
+
+.btn:hover,
+.btn:active {
+  @apply bg-primary-600 dark:bg-primary-400;
+}
+
+.btn:active {
+  @apply scale-95;
+}
+
+.btn.btnSm {
+  @apply px-3 py-2 text-sm;
+}

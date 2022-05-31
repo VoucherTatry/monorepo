@@ -1,0 +1,22 @@
+import { ReactNode } from 'react';
+
+type ICTABannerProps = {
+  title: string;
+  subtitle: string;
+  button: ReactNode;
+};
+
+const CTABanner = (props: ICTABannerProps) => (
+  <div className="bg-primary-100 flex flex-col rounded-md p-4 text-center sm:flex-row sm:items-center sm:justify-between sm:p-12 sm:text-left">
+    <div className="text-2xl font-semibold">
+      <div className="text-stone-900">{props.title}</div>
+      <div className="text-primary-500">{props.subtitle}</div>
+    </div>
+
+    <div className="whitespace-no-wrap mt-3 sm:mt-0 sm:ml-2">
+      {props.button}
+    </div>
+  </div>
+);
+
+export { CTABanner };

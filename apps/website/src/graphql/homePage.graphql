@@ -1,0 +1,66 @@
+query HomePage {
+  stronaDomowa {
+    data {
+      attributes {
+        hero {
+          titleFirstLine
+          titleSecondLine
+          description
+          ctaButtonLabel
+        }
+
+        oNas {
+          tytul
+          opis
+        }
+
+        kategorie {
+          data {
+            id
+            attributes {
+              nazwa
+
+              placeholder {
+                tytul
+                zdjecie {
+                  data {
+                    attributes {
+                      name
+                      alternativeText
+                      url
+                      previewUrl
+                    }
+                  }
+                }
+              }
+
+              vouchery {
+                data {
+                  attributes {
+                    tytul
+                    zdjecie {
+                      data {
+                        attributes {
+                          name
+                          alternativeText
+                          url
+                          previewUrl
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        baner {
+          tekst
+          podsumowanie
+          przycisk
+        }
+      }
+    }
+  }
+}

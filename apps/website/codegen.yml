@@ -1,0 +1,16 @@
+overwrite: true
+schema: 'https://voucher-tatry.up.railway.app/graphql'
+documents: 'src/**/*.graphql'
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-query'
+    config:
+      fetcher: 'graphql-request'
+      exposeQueryKeys: true
+      exposeFetcher: true
+  ./graphql.schema.json:
+    plugins:
+      - 'introspection'

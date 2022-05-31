@@ -1,0 +1,7 @@
+.button {
+  @apply relative z-10 h-6 w-6 flex-shrink-0;
+}
+
+.barIcon {
+  @apply absolute block h-0.5 w-6 transform bg-current transition duration-500 ease-in-out;
+}
