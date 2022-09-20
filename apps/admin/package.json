@@ -2,15 +2,6 @@
   "name": "admin",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint-fix": "next lint --fix",
-    "check-types": "tsc --noEmit --pretty",
-    "update-types": "node ./scripts/update-types.js"
-  },
   "dependencies": {
     "@chakra-ui/react": "^2.2.6",
     "@emotion/react": "^11.10.0",
@@ -48,7 +39,6 @@
     "@types/node": "^18.6.4",
     "@types/react": "^18.0.15",
     "autoprefixer": "^10.4.8",
-    "shared-config": "workspace:*",
     "daisyui": "^2.22.0",
     "dotenv": "^16.0.1",
     "eslint": "8.21.0",
@@ -56,6 +46,7 @@
     "next-transpile-modules": "9.0.0",
     "postcss": "^8.4.14",
     "prisma": "^4.1.1",
+    "shared-config": "workspace:*",
     "tailwindcss": "^3.1.8",
     "tsconfig": "workspace:*",
     "typescript": "^4.8.3",
