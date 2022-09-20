@@ -2,10 +2,10 @@ import { ReactNode, useState } from 'react';
 
 import clsx from 'clsx';
 import Link from 'next/link';
+import { HamburgerMenuButton } from 'ui';
 
 import { Logo } from '../../templates/Logo';
 import NavbarClassNames from './Navbar.module.css';
-import { HamburgerMenuButton } from 'ui';
 
 const NavbarLink = ({
   children,
@@ -18,7 +18,7 @@ const NavbarLink = ({
 }) => (
   <li className={NavbarClassNames['navbar-link']}>
     <div className={NavbarClassNames['navbar-link__bg']} />
-    <Link passHref href={href}>
+    <Link href={href} passHref>
       <a onClick={onClick} className="z-10 drop-shadow">
         {children}
       </a>
@@ -61,7 +61,7 @@ const Navbar = () => {
 
         <div className="relative flex h-20 flex-shrink-0 items-center md:h-24">
           <div className="absolute z-0 h-20 w-full bg-white blur-md filter md:h-24" />
-          <Link href="/">
+          <Link href="/" passHref>
             <a className="z-10 px-4 drop-shadow">
               <Logo xl />
             </a>

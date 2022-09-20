@@ -1,9 +1,9 @@
 import { formatISO9075 } from 'date-fns';
 import { GetStaticPropsContext } from 'next';
 import { dehydrate, QueryClient } from 'react-query';
+import { Spinner } from 'ui';
 
 import WithSidebar from '~/components/layouts/WithSidebar';
-import Spinner from '~/components/Spinner';
 import { findCampaignById } from '~/lib/db/campaigns';
 import {
   useQueryFindCampaignById,
@@ -36,7 +36,7 @@ export default function Campaigns({ ssrError }: DehydratedStaticProps) {
             <div className="flex items-end justify-between lg:space-x-3">
               <h2 className="text-2xl font-semibold">{campaign.name}</h2>
               <span className="text-right opacity-80 lg:text-left">
-                {isCategoryLoading && <Spinner className="h-6 w-6" />}
+                {isCategoryLoading && <Spinner size="md" thickness="3px" />}
 
                 {!isCategoryLoading &&
                   isCategorySuccess &&
@@ -56,7 +56,7 @@ export default function Campaigns({ ssrError }: DehydratedStaticProps) {
             </div>
           </div>
           <div className="flex w-full flex-col space-y-6 lg:mx-auto lg:w-3/5 lg:space-y-12">
-            <div className="relative mx-auto h-60 w-[25rem] max-w-full overflow-hidden rounded-md bg-gray-300">
+            <div className="relative mx-auto h-60 w-[25rem] max-w-full overflow-hidden rounded-md bg-stone-300">
               <div className="absolute bottom-0 flex h-16 w-full items-center bg-black opacity-60">
                 <span className="ml-auto flex space-x-1 px-4 text-right text-3xl font-bold text-white">
                   <span>{campaign.price}</span>
@@ -84,7 +84,7 @@ export default function Campaigns({ ssrError }: DehydratedStaticProps) {
     return (
       <WithSidebar title="Kampanie - ładowanie">
         <div className="flex h-full items-center justify-center">
-          <Spinner className="text-primary h-12 w-12" />
+          <Spinner />
         </div>
       </WithSidebar>
     );

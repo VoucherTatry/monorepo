@@ -1,3 +1,3 @@
 export const ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPCMS_CONTENT_API ||
-  'https://voucher-tatry.up.railway.app/graphql';
+  'https://api-eu-central-1.hygraph.com/v2/cl3jyf95n917w01xnaq933zjg/master';

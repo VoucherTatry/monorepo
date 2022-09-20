@@ -71,17 +71,17 @@ const Footer = () => (
         // }
       >
         <li>
-          <Link href="/#">
+          <Link href="/#" passHref>
             <a>Home</a>
           </Link>
         </li>
         <li>
-          <Link href="/#o-nas">
+          <Link href="/#o-nas" passHref>
             <a>O nas</a>
           </Link>
         </li>
         <li>
-          <Link href="/regulamin">
+          <Link href="/regulamin" passHref>
             <a>Regulamin</a>
           </Link>
         </li>

@@ -1,9 +1,9 @@
 import { Background } from '../components/background/Background';
 import { HeroEmailInput } from '../components/hero/HeroEmailInput';
-import { ComponentStronaHero } from '../generated/graphql';
+import { Hero as HeroTypr } from '../generated/graphql';
 import { Section } from '../layout/Section';
 
-const Hero = (props: Partial<ComponentStronaHero>) => (
+const Hero = (props: Partial<HeroTypr>) => (
   <Background color="bg-stone-100">
     <Section yPadding="pt-10 sm:pt-20 pb-16 sm:pb-32 text-center">
       <HeroEmailInput

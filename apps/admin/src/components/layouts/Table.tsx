@@ -1,45 +1,48 @@
-import { InformationCircleIcon } from '@heroicons/react/outline';
-
-import Spinner from '../Spinner';
+import {
+  TableContainer,
+  Table as ChakraTable,
+  Tr,
+  Td,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Flex,
+} from '@chakra-ui/react';
+import { Spinner } from 'ui';
 
 export const LoadingRow: React.FC<{ colSpan: number }> = function LoadingRow({
   colSpan,
 }) {
   return (
-    <tr>
-      <td colSpan={colSpan} className="text-center">
-        <div className="p-1.5">
-          <Spinner className="text-primary m-auto h-8 w-8" />
-        </div>
-      </td>
-    </tr>
+    <Tr>
+      <Td colSpan={colSpan} className="text-center">
+        <Flex p={1.5} justifyContent="center" alignItems="center">
+          <Spinner m="auto" size="lg" thickness="3px" />
+        </Flex>
+      </Td>
+    </Tr>
   );
 };
 
 export const EmptyRow: React.FC<{ message: string; colSpan: number }> =
   function EmptyRow({ message, colSpan }) {
     return (
-      <tr>
-        <td colSpan={colSpan} className="text-center">
-          <div className="alert alert-sm">
-            <div>
-              <InformationCircleIcon className="h-6 w-6" />
-              <span>{message}</span>
-            </div>
-          </div>
-        </td>
-      </tr>
+      <Tr backgroundColor="gray.50">
+        <Td colSpan={colSpan} className="text-center">
+          <Alert status="info" borderRadius="2xl">
+            <AlertIcon />
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        </Td>
+      </Tr>
     );
   };
 
 const Table = function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      data-theme="light"
-      className="w-full overflow-x-auto rounded-md border border-solid border-stone-300"
-    >
-      <table className="table w-full">{children}</table>
-    </div>
+    <TableContainer borderRadius="2xl" boxShadow="base">
+      <ChakraTable variant="striped">{children}</ChakraTable>
+    </TableContainer>
   );
 };
 

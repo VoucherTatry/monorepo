@@ -1,14 +1,19 @@
 import { useState } from 'react';
 
+import {
+  FormControl,
+  FormLabel,
+  Heading,
+  Stack,
+  useToast,
+} from '@chakra-ui/react';
 import { PostgrestError } from '@supabase/supabase-js';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
+import { Button, Input, Spinner } from 'ui';
 import { object, string } from 'yup';
 
-import ErrorAlert from '~/components/ErrorAlert';
-import Input from '~/components/Input';
-import PhoneInput from '~/components/PhoneInput';
-import Spinner from '~/components/Spinner';
+import Editor from '~/components/Editor';
 import { PHONE_REGEXP } from '~/lib/constants';
 import { addMerchant, updateMerchant } from '~/lib/db/merchants';
 
@@ -43,6 +48,7 @@ type FormProps =
     };
 
 export default function Form({ type, initialState }: FormProps) {
+  const toast = useToast();
   const { push } = useRouter();
 
   const [formError, setFormError] = useState<PostgrestError | null>(null);
@@ -76,129 +82,143 @@ export default function Form({ type, initialState }: FormProps) {
     }
   }
 
+  function addToast(message?: string) {
+    toast({
+      title: 'Błąd:',
+      description:
+        message ??
+        'Wystąpił niespodziewany błąd podczas dodawania klienta, spróbuj ponownie później',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+
   return (
-    <>
-      <Formik
-        initialValues={initialState}
-        validationSchema={validationSchema}
-        validateOnChange={false}
-        onSubmit={async (values, { setSubmitting }) => {
-          const data = await formAction(values);
+    <Formik
+      initialValues={initialState}
+      validationSchema={validationSchema}
+      validateOnChange={false}
+      onSubmit={async (values, { setSubmitting }) => {
+        const data = await formAction(values);
 
-          // if (error) {
-          //   setSubmitting(false);
-          //   if (error.code === "23505") {
-          //     setFormError({
-          //       code: "23505",
-          //       message: "Klient o podanych danych już istnieje",
-          //       details: "",
-          //       hint: "",
-          //     });
-          //   } else {
-          //     setFormError(error);
-          //   }
-          // }
+        // if (error) {
+        //   setSubmitting(false);
+        //   if (error.code === "23505") {
+        //     setFormError({
+        //       code: "23505",
+        //       message: "Klient o podanych danych już istnieje",
+        //       details: "",
+        //       hint: "",
+        //     });
+        //   } else {
+        //     setFormError(error);
+        //   }
+        // }
 
-          if (!data) {
-            setSubmitting(false);
-            setFormError({
-              code: 'internal',
-              message:
-                'Wystąpił niespodziewany błąd podczas dodawania klienta, spróbuj ponownie później',
-              details: '',
-              hint: '',
-            });
-          }
+        if (!data) {
+          setSubmitting(false);
+          setFormError({
+            code: 'internal',
+            message:
+              'Wystąpił niespodziewany błąd podczas dodawania klienta, spróbuj ponownie później',
+            details: '',
+            hint: '',
+          });
+          addToast();
+        }
 
-          if (data) {
-            if (type === 'add') push('/klienci');
-            if (type === 'edit') push(`/klienci/${initialState.id}`);
-          }
-        }}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isValid,
-          isSubmitting,
-        }) => (
-          <form
-            className="mx-auto w-11/12 space-y-6 lg:w-4/5"
-            onSubmit={handleSubmit}
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl lg:text-3xl">
-                {type === 'add' && 'Dodaj nowego klienta'}
-                {type === 'edit' && 'Edytuj dane klienta'}
-              </h2>
-              {isSubmitting && <Spinner className="text-primary h-6 w-6" />}
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-12">
-              <Input
-                label="Nazwa klienta"
-                type="text"
-                id="name"
-                placeholder=" "
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.name ? errors.name : null}
-              />
-              <Input
-                label="Adres"
-                type="text"
-                id="address"
-                value={values.address}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.address ? errors.address : null}
-              />
-              <Input
-                label="Email"
-                type="email"
-                inputMode="email"
-                id="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.email ? errors.email : null}
-              />
-              <PhoneInput
-                label="Numer telefonu"
-                type="text"
-                inputMode="tel"
-                id="phone"
-                value={values.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.phone ? errors.phone : null}
-              />
-            </div>
+        if (data) {
+          if (type === 'add') push('/klienci');
+          if (type === 'edit') push(`/klienci/${initialState.id}`);
+        }
+      }}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isValid,
+        isSubmitting,
+      }) => (
+        <Stack
+          as="form"
+          spacing={6}
+          px={12}
+          py={6}
+          backgroundColor="gray.50"
+          borderRadius="2xl"
+          boxShadow="base"
+          maxW="container.lg"
+          // @ts-expect-error chakra falls back to html div, it doesn't change the type based on "as" prop
+          onSubmit={handleSubmit}
+        >
+          <div className="flex items-center justify-between">
+            <Heading fontSize={{ base: 'xl', lg: '3xl' }}>
+              {type === 'add' && 'Dodaj nową kampanię'}
+              {type === 'edit' && 'Edytuj kampanię'}
+            </Heading>
+            {isSubmitting && <Spinner size="md" thickness="3px" />}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-12">
+            <Input
+              label="Nazwa klienta"
+              type="text"
+              id="name"
+              placeholder=" "
+              value={values.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.name ? errors.name : null}
+            />
+            <Input
+              label="Adres"
+              type="text"
+              id="address"
+              value={values.address}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.address ? errors.address : null}
+            />
+            <Input
+              label="Email"
+              type="email"
+              inputMode="email"
+              id="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.email ? errors.email : null}
+            />
+            <Input
+              label="Numer telefonu"
+              type="text"
+              inputMode="tel"
+              id="phone"
+              value={values.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.phone ? errors.phone : null}
+              leftAddon="+48"
+            />
 
-            <div className="flex justify-end">
-              <button
-                className="btn btn-primary"
-                type="submit"
-                disabled={!isValid}
-              >
-                {type === 'add' && 'Dodaj klienta'}
-                {type === 'edit' && 'Zapisz zmiany'}
-              </button>
-            </div>
-          </form>
-        )}
-      </Formik>
+            <FormControl gridColumn="1/-1">
+              <FormLabel htmlFor="description">* Opis kampanii</FormLabel>
+              <Editor id="description" />
+            </FormControl>
+          </div>
 
-      <ErrorAlert
-        show={!!formError}
-        onOpenChange={(open) => !open && setFormError(null)}
-      >
-        <span>{formError?.message}</span>
-      </ErrorAlert>
-    </>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={!isValid}>
+              {type === 'add' && 'Dodaj kampanię'}
+              {type === 'edit' && 'Zapisz zmiany'}
+            </Button>
+          </div>
+        </Stack>
+      )}
+    </Formik>
   );
 }

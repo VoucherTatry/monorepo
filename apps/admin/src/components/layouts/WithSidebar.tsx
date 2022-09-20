@@ -1,40 +1,31 @@
 import React, { useState } from 'react';
 
-import { GlobeIcon, HomeIcon, UsersIcon } from '@heroicons/react/outline';
-import { ToastProvider, ToastViewport } from '@radix-ui/react-toast';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import {
+  Flex,
+  Box,
+  Stack,
+  Link as ChakraLink,
+  HStack,
+  Heading,
+  Icon,
+} from '@chakra-ui/react';
+import {
+  FolderIcon,
+  GlobeIcon,
+  HomeIcon,
+  LogoutIcon,
+  TagIcon,
+  UsersIcon,
+} from '@heroicons/react/outline';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Button, HamburgerMenuButton } from 'ui';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
 import LogoHorizontal from '~/components/LogoHorizontal';
-import { Button, HamburgerMenuButton } from 'ui';
-// import ThemeChanger from '~/components/ThemeChanger';
-
-function HamburgerIcon({ open }: { open: boolean }) {
-  return (
-    <label className="swapRotate swap pointer-events-none">
-      <input type="checkbox" checked={open} readOnly />
-      <svg
-        className="swap-off h-6 w-6 fill-current"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512"
-      >
-        <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
-      </svg>
-
-      <svg
-        className="swap-on h-6 w-6 fill-current"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512"
-      >
-        <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
-      </svg>
-    </label>
-  );
-}
 
 function SidebarMenuItem({
   children,
@@ -53,69 +44,120 @@ function SidebarMenuItem({
     activeHome || (!homeMenuItem && router.pathname.startsWith(pathname));
 
   return (
-    <li className="flex flex-col">
-      <div className="relative px-6 py-1">
-        <Link href={pathname}>
-          <a
-            className={clsx(
-              'inline-flex w-full items-center px-3 py-2 text-sm font-semibold text-stone-100 transition-colors duration-150 lg:text-base',
-              {
-                'focus:bg-primary-500 rounded-md opacity-60 hover:opacity-100':
-                  !match,
-              }
-            )}
+    <Flex as="li" flexDirection="column">
+      <Box position="relative" px={6} py={1}>
+        <Link href={pathname} passHref>
+          <ChakraLink
+            display="inline-flex"
+            w="full"
+            alignItems="center"
+            px={3}
+            py={2}
+            fontSize="md"
+            fontWeight="semibold"
+            color="gray.100"
+            transitionProperty="color"
+            transitionDuration="150ms"
+            textDecoration="none"
+            opacity={!match ? '60%' : undefined}
+            rounded="2xl"
+            _hover={{ opacity: !match && '100' }}
+            _active={{
+              backgroundColor: !match
+                ? 'var(--chakra-colors-primary-500)'
+                : undefined,
+            }}
             aria-current="page"
           >
             {match && (
-              <span
-                className="bg-primary-500 absolute inset-y-0 left-0 w-2 rounded-tr-md rounded-br-md"
+              <Box
+                as="span"
+                backgroundColor="primary.500"
+                position="absolute"
+                insetY={0}
+                left={0}
+                w={2}
+                roundedRight="md"
                 aria-hidden="true"
-              ></span>
+              />
             )}
             {children}
-          </a>
+          </ChakraLink>
         </Link>
-      </div>
-    </li>
+      </Box>
+    </Flex>
   );
 }
 
 const BrandButton: React.FC = () => (
-  <Link href="/">
-    <a className="flex items-center justify-start space-x-4 px-9 text-lg font-bold text-stone-100 lg:text-2xl">
+  <Link href="/" passHref>
+    <Flex
+      as="a"
+      alignItems="center"
+      justifyContent="start"
+      px={9}
+      fontSize={{ base: 'lg', lg: '2xl' }}
+      fontWeight="bold"
+      color="gray.100"
+    >
       <LogoHorizontal
         className="h-8"
         textClassName="text-white"
-        mountainsClassName={{ body: 'text-gray-300', line: 'text-gray-400' }}
+        mountainsClassName={{ body: 'text-stone-300', line: 'text-stone-400' }}
       />
-    </a>
+    </Flex>
   </Link>
 );
 
 const SideMenu: React.FC = () => (
-  <div className="py-4 text-stone-100">
+  <Box py={4} color="gray.100">
     <BrandButton />
-    <ul className="mt-6">
-      <SidebarMenuItem pathname="/">
-        <div className="flex space-x-2 lg:space-x-4">
-          <HomeIcon className="h-4 w-4 lg:h-6 lg:w-6" />
-          <span>Overview</span>
-        </div>
-      </SidebarMenuItem>
-      <SidebarMenuItem pathname="/klienci">
-        <div className="flex space-x-2 lg:space-x-4">
-          <UsersIcon className="h-4 w-4 lg:h-6 lg:w-6" />
-          <span>Klienci</span>
-        </div>
-      </SidebarMenuItem>
-      <SidebarMenuItem pathname="/kampanie">
-        <div className="flex space-x-2 lg:space-x-4">
-          <GlobeIcon className="h-4 w-4 lg:h-6 lg:w-6" />
-          <span>Kampanie</span>
-        </div>
-      </SidebarMenuItem>
-    </ul>
-  </div>
+    <Stack mt={12} spacing={8}>
+      <Stack as="ul" spacing={0}>
+        <SidebarMenuItem pathname="/">
+          <HStack spacing={{ base: 2, lg: 4 }}>
+            <Icon w={6} h={6} as={HomeIcon} />
+            <span>Overview</span>
+          </HStack>
+        </SidebarMenuItem>
+      </Stack>
+      <Stack as="ul" spacing={0}>
+        <Heading as="h4" fontSize="lg" color="gray.400" p={4}>
+          Strefa użytkownika
+        </Heading>
+        <SidebarMenuItem pathname="/kampanie">
+          <HStack spacing={{ base: 2, lg: 4 }}>
+            <Icon w={6} h={6} as={TagIcon} />
+            <span>Kampanie</span>
+          </HStack>
+        </SidebarMenuItem>
+      </Stack>
+
+      <Stack as="ul" spacing={0}>
+        <Heading as="h4" fontSize="lg" color="gray.400" p={4}>
+          Strefa administratora
+        </Heading>
+        <SidebarMenuItem pathname="/strona_internetowa">
+          <HStack spacing={{ base: 2, lg: 4 }}>
+            <Icon w={6} h={6} as={GlobeIcon} />
+            <span>Strona internetowa</span>
+          </HStack>
+        </SidebarMenuItem>
+        <SidebarMenuItem pathname="/kategorie">
+          <HStack spacing={{ base: 2, lg: 4 }}>
+            <Icon w={6} h={6} as={FolderIcon} />
+            <span>Kategorie</span>
+          </HStack>
+        </SidebarMenuItem>
+        <SidebarMenuItem pathname="/klienci">
+          <HStack spacing={{ base: 2, lg: 4 }}>
+            <Icon w={6} h={6} as={UsersIcon} />
+            <span>Klienci</span>
+          </HStack>
+        </SidebarMenuItem>
+      </Stack>
+    </Stack>
+  </Box>
 );
 
 function WithSidebar({
@@ -141,70 +183,118 @@ function WithSidebar({
   }
 
   return (
-    <div className="flex h-full">
+    <Flex h="full">
       <Head>
         <title key="title">{title}</title>
       </Head>
-      <aside
+      <Flex
+        as="aside"
+        position={{ base: 'fixed', lg: 'static' }}
+        inset={0}
+        transitionProperty={{ base: 'transform', lg: 'none' }}
+        transitionDuration="300ms"
+        transitionTimingFunction="ease-in-out"
+        // translateX={{ base: sidebarOpen ? 0 : '-100%', lg: 0 }}
+        zIndex={50}
+        mt={{ base: 16, lg: 0 }}
+        w={{ base: 64, xl: 64 }}
+        flexShrink={0}
+        bgColor="gray.800"
+        color="gray.100"
+        boxShadow="base"
+        overflowY="auto"
         className={clsx(
-          'fixed inset-y-0 lg:static lg:translate-x-0',
-          'transition-transform duration-300 ease-in-out lg:transition-none',
-          { '-translate-x-full': !sidebarOpen },
-          'z-50 mt-14 w-64 flex-shrink-0 overflow-y-auto bg-stone-800 text-stone-100 shadow lg:mt-0 xl:w-80'
+          {
+            '-translate-x-full': !sidebarOpen,
+            'translate-x-0': sidebarOpen,
+          },
+          'lg:translate-x-0'
         )}
       >
         <SideMenu />
-      </aside>
-      <div
+      </Flex>
+      <Box
+        transitionProperty="colors"
+        transitionDuration="500ms"
+        transitionTimingFunction="ease-in-out"
+        translateX={!sidebarOpen ? '-100%' : undefined}
+        opacity={!sidebarOpen ? '0%' : '50%'}
+        position="fixed"
+        inset={0}
+        zIndex={40}
+        alignItems="end"
+        bgColor="gray.900"
+        display={{ base: sidebarOpen ? 'block' : 'none', lg: 'none' }}
         onClick={toggleSidebar}
-        className={clsx(
-          'transition-opacity duration-300 ease-in-out',
-          { '-translate-x-full opacity-0': !sidebarOpen },
-          'fixed inset-0 z-40 items-end bg-stone-900 bg-opacity-50 lg:hidden'
-        )}
-      ></div>
-      <div className="flex w-full flex-1 flex-col overflow-hidden">
-        <header className="z-40 bg-stone-800 py-4 text-stone-100 shadow-md lg:bg-transparent lg:shadow-none">
-          <div className="mx-auto flex h-full items-center justify-between px-6 text-stone-100">
-            <div className="flex space-x-4">
-              <HamburgerMenuButton
-                isToggled={sidebarOpen}
-                onToggle={toggleSidebar}
-                className="lg:hidden"
-              />
-              {!isRootPage && (
-                <div className="hidden text-stone-900 lg:block">
-                  <Breadcrumbs />
-                </div>
-              )}
-            </div>
-            <ul className="flex flex-shrink-0 items-center space-x-6">
-              <li className="flex">
-                <Button sm onClick={signOut}>
-                  Wyloguj się
-                </Button>
-              </li>
-              {/* <li className="flex">
+      ></Box>
+      <Flex flexDir="column" flex="1 1 0%" w="full" overflow="hidden">
+        <Flex
+          as="header"
+          w="full"
+          alignItems="center"
+          justifyContent="space-between"
+          px={6}
+          py={4}
+          color={{ base: 'gray.100', lg: 'gray.900' }}
+          zIndex={40}
+          bgColor={{ base: 'gray.800', lg: 'transparent' }}
+          boxShadow={{ base: 'md', lg: 'none' }}
+        >
+          <Flex alignItems="center" display={{ base: 'flex', lg: 'none' }}>
+            <HamburgerMenuButton
+              isToggled={sidebarOpen}
+              onToggle={toggleSidebar}
+            />
+          </Flex>
+          {!isRootPage && (
+            <Box display={{ base: 'none', lg: 'block' }} color="gray.900">
+              <Breadcrumbs />
+            </Box>
+          )}
+          <HStack
+            as="ul"
+            flexShrink={0}
+            alignItems="center"
+            spacing={4}
+            ml="auto"
+          >
+            <Flex as="li">
+              <Button size="sm" onClick={signOut}>
+                <Icon w={6} h={6} as={LogoutIcon} />
+                <span>Wyloguj się</span>
+              </Button>
+            </Flex>
+            {/* <li className="flex">
                 <div className="text-stone-100 lg:text-stone-900 h-6 w-6">
                   <ThemeChanger />
                 </div>
               </li> */}
-            </ul>
-          </div>
-        </header>
-        <ToastProvider duration={5000}>
-          {!isRootPage && (
-            <div className="block overflow-x-auto px-4 pt-4 lg:hidden">
-              <Breadcrumbs />
-            </div>
-          )}
-          <main className="lg-py-0 relative h-full overflow-y-auto overflow-x-hidden py-8 px-6 lg:px-12">
-            {children}
-            <ToastViewport className="fixed bottom-0 right-0 select-none" />
-          </main>
-        </ToastProvider>
-      </div>
-    </div>
+          </HStack>
+        </Flex>
+        {!isRootPage && (
+          <Box
+            overflowX="auto"
+            px={4}
+            py={4}
+            display={{ base: 'block', lg: 'none' }}
+          >
+            <Breadcrumbs />
+          </Box>
+        )}
+        <Box
+          as="main"
+          position="relative"
+          h="full"
+          overflowY="auto"
+          overflowX="hidden"
+          py={8}
+          px={{ base: 6, lg: 12 }}
+          backgroundColor="gray.100"
+        >
+          {children}
+        </Box>
+      </Flex>
+    </Flex>
   );
 }
 

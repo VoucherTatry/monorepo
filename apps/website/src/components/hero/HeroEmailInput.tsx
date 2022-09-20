@@ -3,6 +3,7 @@ import { ReactNode, useState } from 'react';
 import clsx from 'clsx';
 
 import ButtonClassNames from '../Button.module.css';
+import { Button, Input } from 'ui';
 
 type IHeroEmailInputProps = {
   title: {
@@ -42,12 +43,9 @@ const HeroEmailInput = (props: IHeroEmailInputProps) => {
         <div className="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
           <label className="w-full sm:w-auto">
             <span className="sr-only">E-mail</span>
-            <input
-              className={clsx(
-                ButtonClassNames.btn,
-                ButtonClassNames['btn-base'],
-                'w-full shadow placeholder:text-stone-400'
-              )}
+            <Input
+              inputOnly={true}
+              id="email"
               placeholder="Podaj swój adres email"
               type="email"
               inputMode="email"
@@ -57,17 +55,9 @@ const HeroEmailInput = (props: IHeroEmailInputProps) => {
             />
           </label>
 
-          <button
-            disabled={!hasEmail}
-            className={clsx(
-              ButtonClassNames.btn,
-              ButtonClassNames['btn-primary'],
-              ButtonClassNames['btn-base']
-            )}
-            type="submit"
-          >
+          <Button disabled={!hasEmail} type="submit">
             {props.buttonText}
-          </button>
+          </Button>
         </div>
         <div className="flex justify-center py-4"></div>
         {/* <span className="text-sm">Wpisz się już dziś na listę oczekujących.</span> */}

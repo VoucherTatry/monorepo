@@ -3,6 +3,6 @@
   "compilerOptions": {
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "build", "node_modules"]
 }

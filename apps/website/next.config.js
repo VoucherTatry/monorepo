@@ -5,6 +5,6 @@ module.exports = withTM({
   trailingSlash: true,
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['media.graphassets.com'],
   },
 });

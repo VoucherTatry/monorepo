@@ -1,10 +1,10 @@
 import { GetStaticPropsContext } from 'next';
 import { dehydrate, QueryClient } from 'react-query';
+import { Spinner } from 'ui';
 
 import WithSidebar from '~/components/layouts/WithSidebar';
 import type { EditFormState } from '~/components/merchants/Form';
 import Form from '~/components/merchants/Form';
-import Spinner from '~/components/Spinner';
 import { findMerchantById } from '~/lib/db/merchants';
 import {
   useQueryFindMerchantById,
@@ -34,7 +34,7 @@ export default function EditMerchant({ ssrError }: DehydratedStaticProps) {
     return (
       <WithSidebar title="Voucher Tatry - Edycja klienta - ładowanie">
         <div className="flex h-full items-center justify-center">
-          <Spinner className="text-primary h-12 w-12" />
+          <Spinner />
         </div>
       </WithSidebar>
     );

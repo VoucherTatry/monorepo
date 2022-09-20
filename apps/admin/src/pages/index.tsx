@@ -1,32 +1,37 @@
-import { UserIcon } from '@heroicons/react/outline';
-import { withPageAuth } from '@supabase/supabase-auth-helpers/nextjs';
+import { Box, Icon, HStack, Stack, Heading } from '@chakra-ui/react';
+import { UsersIcon } from '@heroicons/react/outline';
 import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import { LinkButton } from 'ui';
 
 import WithSidebar from '~/components/layouts/WithSidebar';
 
 export default function Homepage() {
   return (
     <WithSidebar title="Voucher Tatry - strona domowa">
-      <div className="card card-side border-base-300 bg-base-100 border border-solid shadow-xl">
-        <figure className="pl-8">
-          <UserIcon className="h-20 w-20"></UserIcon>
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">Klienci</h2>
+      <HStack
+        bg="white"
+        boxShadow="base"
+        borderRadius="2xl"
+        py={6}
+        px={{ base: 8, lg: 16 }}
+      >
+        <Box as="figure">
+          <Icon as={UsersIcon} color="gray.900" w={20} h={20} />
+        </Box>
+        <Stack>
+          <Heading fontSize="2xl">Klienci</Heading>
           <p>Klinkij aby przejść do listy klientów.</p>
-          <div className="card-actions justify-end">
-            <Link href="/klienci">
-              <a className="btn btn-primary">Idź</a>
-            </Link>
-          </div>
-        </div>
-      </div>
+          <Link href="/klienci" passHref>
+            <LinkButton>Idź</LinkButton>
+          </Link>
+        </Stack>
+      </HStack>
     </WithSidebar>
   );
 }
 
-export const getServerSideProps = withPageAuth({
-  authRequired: true,
-  redirectTo: '/auth',
-}) as GetServerSideProps;
+// export const getServerSideProps = withPageAuth({
+//   authRequired: true,
+//   redirectTo: '/auth',
+// }) as GetServerSideProps;

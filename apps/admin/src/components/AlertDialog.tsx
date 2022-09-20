@@ -1,7 +1,15 @@
-import { Dialog } from '@headlessui/react';
-import clsx from 'clsx';
+import { useRef } from 'react';
 
-import DialogBase from './DialogBase';
+import {
+  AlertDialog as ChakraAlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  ThemingProps,
+} from '@chakra-ui/react';
+import { Button } from 'ui';
 
 type AlertDialogProps = {
   isOpen: boolean;
@@ -23,45 +31,53 @@ export default function AlertDialog({
   variant = 'info',
   text,
 }: AlertDialogProps) {
-  let confirmBtnClass;
+  const cancelRef = useRef(null);
+
+  let confirmBtnScheme: ThemingProps<'Button'>['colorScheme'];
   switch (variant) {
     case 'danger':
-      confirmBtnClass = 'btn-error';
+      confirmBtnScheme = 'red';
       break;
     case 'warning':
-      confirmBtnClass = 'btn-warning';
+      confirmBtnScheme = 'orange';
       break;
     case 'info':
     default:
-      confirmBtnClass = 'btn-info';
+      confirmBtnScheme = 'blue';
       break;
   }
 
   return (
-    <DialogBase isOpen={isOpen} onClose={onCancel}>
-      <Dialog.Title
-        as="h3"
-        className="text-base-content text-lg font-medium leading-6"
-      >
-        {text.title}
-      </Dialog.Title>
-      <Dialog.Description>{text.description}</Dialog.Description>
-      <div className="mt-4 flex w-full justify-end space-x-4">
-        <button
-          type="button"
-          className="btn btn-outline btn-md"
-          onClick={onCancel}
-        >
-          {text.cancel}
-        </button>
-        <button
-          type="button"
-          className={clsx('btn btn-md', confirmBtnClass)}
-          onClick={onConfirm}
-        >
-          {text.confirm}
-        </button>
-      </div>
-    </DialogBase>
+    <ChakraAlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onCancel}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg">{text.title}</AlertDialogHeader>
+          <AlertDialogBody>{text.description}</AlertDialogBody>
+          <AlertDialogFooter experimental_spaceX={4}>
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              size="md"
+              type="button"
+              onClick={onCancel}
+            >
+              {text.cancel}
+            </Button>
+            <Button
+              type="button"
+              size="md"
+              colorScheme={confirmBtnScheme}
+              onClick={onConfirm}
+            >
+              {text.confirm}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </ChakraAlertDialog>
   );
 }

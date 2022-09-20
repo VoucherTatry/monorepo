@@ -1,14 +1,23 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
+import {
+  useToast,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Checkbox,
+  ScaleFade,
+} from '@chakra-ui/react';
 import { TrashIcon } from '@heroicons/react/outline';
 import { PostgrestError } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { useMutation, useQuery } from 'react-query';
+import { Button, Spinner } from 'ui';
 
 import AlertDialog from '~/components/AlertDialog';
-import ErrorAlert from '~/components/ErrorAlert';
 import Table, { EmptyRow, LoadingRow } from '~/components/layouts/Table';
-import Spinner from '~/components/Spinner';
 import { findCampaignsByMerchantId } from '~/lib/db/campaigns';
 import { deleteMerchantsByIds, getAllMerchants } from '~/lib/db/merchants';
 import type { Merchant } from '~/types/merchants';
@@ -24,19 +33,16 @@ const MerchantDataRow: React.FC<{
   );
 
   return (
-    <tr>
-      <th className="w-16">
-        <label>
-          <input
-            type="checkbox"
-            className="checkbox"
-            checked={checked}
-            onChange={() => onChecked()}
-          />
-        </label>
-      </th>
-      <td>
-        <Link href={`/klienci/${merchant.id}`}>
+    <Tr backgroundColor="gray.50">
+      <Td className="w-16">
+        <Checkbox
+          colorScheme="primary"
+          isChecked={checked}
+          onChange={() => onChecked()}
+        />
+      </Td>
+      <Td>
+        <Link href={`/klienci/${merchant.id}`} passHref>
           <a className="btn btn-ghost text-left">
             <div className="space-y-1">
               <div className="font-bold">{merchant.name}</div>
@@ -48,23 +54,23 @@ const MerchantDataRow: React.FC<{
             </div>
           </a>
         </Link>
-      </td>
-      <td>{merchant.address}</td>
-      <td>
+      </Td>
+      <Td>{merchant.address}</Td>
+      <Td>
         {campaignsCountLoading ? (
-          <Spinner className="text-primary h-8 w-8" />
+          <Spinner size="lg" thickness="3px" />
         ) : (
           count?.length ?? 0
         )}
-      </td>
-      <th>
+      </Td>
+      <Td>
         <div className="flex justify-end">
-          <Link href={`/klienci/${merchant.id}`}>
-            <a className="btn btn-ghost btn-xs">więcej</a>
+          <Link href={`/klienci/${merchant.id}`} passHref>
+            <a>więcej</a>
           </Link>
         </div>
-      </th>
-    </tr>
+      </Td>
+    </Tr>
   );
 });
 
@@ -108,7 +114,9 @@ export function MerchantTableBody({
 }
 
 export default function MerchantsTable() {
-  const { data, error, isLoading } = useQuery<
+  const toast = useToast();
+
+  const { data, error, isError, isLoading } = useQuery<
     Merchant[] | null,
     PostgrestError
   >('merchants', getAllMerchants);
@@ -129,6 +137,20 @@ export default function MerchantsTable() {
   const [selectedMerchantIds, setSelectedMerchantIds] = useState<
     number[] | null
   >(null);
+
+  const errorMessage = error?.message;
+  useEffect(() => {
+    if (isError || errorMessage) {
+      toast({
+        title: 'Błąd:',
+        description:
+          errorMessage ?? 'Nieoczekiwany błąd. Proszę spróbować później.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [isError, errorMessage, toast]);
 
   function showDeleteAlert() {
     setIsAlertOpen(true);
@@ -156,57 +178,61 @@ export default function MerchantsTable() {
 
   function deleteConfirm() {
     hideDeleteAlert();
-    deleteMerchants.mutate({ ids: selectedMerchantIds });
+    deleteMerchants
+      .mutateAsync({ ids: selectedMerchantIds })
+      .then((res) => console.log(res))
+      .catch((e) => console.error(e));
   }
 
   return (
     <>
       <Table>
-        <thead>
-          <tr className="bg-stone-300">
-            <th className="w-16 bg-stone-300">
-              <label>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  disabled={emptyData}
-                  checked={allMerchantsChecked}
-                  onChange={() => {
-                    if (allMerchantsChecked) {
-                      setSelectedMerchantIds(null);
-                    } else {
-                      setSelectedMerchantIds(availableMerchantIds);
-                    }
-                  }}
-                />
-              </label>
-            </th>
-            <th className="bg-stone-300">Klient</th>
-            <th className="bg-stone-300">Adres</th>
-            <th className="bg-stone-300">Liczba kampanii</th>
-            <th className="bg-stone-300"></th>
-          </tr>
-        </thead>
-        <tbody>
+        <Thead>
+          <Tr className="bg-stone-300">
+            <Th className="w-16 bg-stone-300">
+              <Checkbox
+                colorScheme="primary"
+                disabled={emptyData}
+                isChecked={allMerchantsChecked}
+                onChange={() => {
+                  if (allMerchantsChecked) {
+                    setSelectedMerchantIds(null);
+                  } else {
+                    setSelectedMerchantIds(availableMerchantIds);
+                  }
+                }}
+              />
+            </Th>
+            <Th className="bg-stone-300">Klient</Th>
+            <Th className="bg-stone-300">Adres</Th>
+            <Th className="bg-stone-300">Liczba kampanii</Th>
+            <Th className="bg-stone-300"></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           <MerchantTableBody
             merchants={data ?? []}
             selectedMerchantIds={selectedMerchantIds}
             onMerchantChecked={toggleMerchantId}
             loading={isLoading}
           />
-        </tbody>
+        </Tbody>
       </Table>
       <div className="flex justify-between">
         <div className="flex items-center">
-          {selectedMerchantIdsCount > 0 && !isLoading && (
-            <button
+          <ScaleFade
+            initialScale={0.9}
+            in={selectedMerchantIdsCount > 0 && !isLoading}
+          >
+            <Button
+              size="sm"
               className="btn btn-error btn-sm flex items-center space-x-2"
               onClick={showDeleteAlert}
             >
               <TrashIcon className="h-5 w-5" />
               <span>Usuń</span>
-            </button>
-          )}
+            </Button>
+          </ScaleFade>
         </div>
       </div>
 
@@ -231,10 +257,6 @@ export default function MerchantsTable() {
           cancel: 'Anuluj',
         }}
       />
-
-      <ErrorAlert show={!!error} onOpenChange={(open) => !open}>
-        <span>{error?.message}</span>
-      </ErrorAlert>
     </>
   );
 }

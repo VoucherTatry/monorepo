@@ -6,7 +6,7 @@
   html,
   body,
   #__next {
-    @apply fixed m-0 h-full max-h-screen w-full max-w-screen overflow-hidden bg-stone-200 p-0 font-sans text-stone-900 antialiased selection:bg-primary-500 selection:text-stone-100;
+    @apply max-w-screen selection:bg-primary-500 fixed m-0 h-full max-h-screen w-full overflow-hidden bg-stone-50 p-0 font-sans text-stone-900 antialiased selection:text-stone-100;
   }
 
   a {

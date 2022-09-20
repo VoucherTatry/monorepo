@@ -1,4 +1,3 @@
-import type { AddFormState } from '~/components/campaigns/Form';
 import Form from '~/components/campaigns/Form';
 import WithSidebar from '~/components/layouts/WithSidebar';
 

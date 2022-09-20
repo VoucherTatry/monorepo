@@ -23,7 +23,7 @@ export async function getStaticProps() {
 export default function Regulamin() {
   const { data, isLoading } = useRegulaminQuery(graphqlClient);
 
-  const sections = data?.regulamin?.data?.attributes?.sekcja;
+  const sections = data?.page?.sections;
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -40,10 +40,10 @@ export default function Regulamin() {
         return (
           <Section
             key={section.id}
-            title={section.tytul}
+            title={section.title}
             description={
               <div className="prose mx-auto text-left">
-                <PrintMarkdown markdown={section.opis} />
+                <PrintMarkdown markdown={section.description.markdown} />
               </div>
             }
           />

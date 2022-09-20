@@ -1,66 +1,33 @@
 query HomePage {
-  stronaDomowa {
-    data {
-      attributes {
-        hero {
-          titleFirstLine
-          titleSecondLine
-          description
-          ctaButtonLabel
-        }
+  homePage(where: { title: "home" }) {
+    hero {
+      titleFirstLine
+      titleSecondLine
+      description
+      ctaButtonLabel
+    }
 
-        oNas {
-          tytul
-          opis
-        }
+    aboutSection {
+      title
+      description
+    }
 
-        kategorie {
-          data {
-            id
-            attributes {
-              nazwa
-
-              placeholder {
-                tytul
-                zdjecie {
-                  data {
-                    attributes {
-                      name
-                      alternativeText
-                      url
-                      previewUrl
-                    }
-                  }
-                }
-              }
-
-              vouchery {
-                data {
-                  attributes {
-                    tytul
-                    zdjecie {
-                      data {
-                        attributes {
-                          name
-                          alternativeText
-                          url
-                          previewUrl
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        baner {
-          tekst
-          podsumowanie
-          przycisk
+    categories {
+      id
+      title
+      kafelek {
+        title
+        photo {
+          alt
+          url
         }
       }
+    }
+
+    banner {
+      text
+      summary
+      button
     }
   }
 }

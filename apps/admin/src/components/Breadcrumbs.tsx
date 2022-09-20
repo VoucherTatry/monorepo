@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import clsx from 'clsx';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -111,46 +111,42 @@ export default function Breadcrumbs() {
   }
 
   return (
-    <nav aria-label="breadcrumbs">
-      <ul className="flex flex-row space-x-2">
-        {breadcrumbs.map(
-          (breadcrumbElement: BreadcrumbElement, index: number) => {
-            const last = index === breadcrumbs.length - 1;
-            if (breadcrumbElement.breadcrumb === undefined) {
-              return <li>(not found)</li>;
-            }
+    <Breadcrumb>
+      {breadcrumbs.map(
+        (breadcrumbElement: BreadcrumbElement, index: number) => {
+          const last = index === breadcrumbs.length - 1;
 
-            if (breadcrumbElement.breadcrumb === 'edytuj') {
-              return (
-                <li
-                  key={index}
-                  className={clsx({
-                    'text-primary font-bold': last,
-                  })}
-                >
-                  {convertBreadcrumb(breadcrumbElement.breadcrumb)}
-                </li>
-              );
-            }
-
+          if (breadcrumbElement.breadcrumb === undefined) {
             return (
-              <>
-                <li
-                  key={index}
-                  className={clsx({
-                    'text-primary font-bold': last,
-                  })}
-                >
-                  <Link href={breadcrumbElement.href}>
-                    <a>{convertBreadcrumb(breadcrumbElement.breadcrumb)}</a>
-                  </Link>
-                </li>
-                {!last && <span className="font-semibold">/</span>}
-              </>
+              <BreadcrumbItem key={index}>
+                <BreadcrumbLink fontWeight={last ? 'bold' : undefined}>
+                  (not found)
+                </BreadcrumbLink>
+              </BreadcrumbItem>
             );
           }
-        )}
-      </ul>
-    </nav>
+
+          if (breadcrumbElement.breadcrumb === 'edytuj') {
+            return (
+              <BreadcrumbItem key={index} isCurrentPage={last}>
+                <BreadcrumbLink fontWeight={last ? 'bold' : undefined}>
+                  {convertBreadcrumb(breadcrumbElement.breadcrumb)}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            );
+          }
+
+          return (
+            <BreadcrumbItem key={index} isCurrentPage={last}>
+              <Link href={breadcrumbElement.href} passHref>
+                <BreadcrumbLink fontWeight={last ? 'bold' : undefined}>
+                  {convertBreadcrumb(breadcrumbElement.breadcrumb)}
+                </BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+          );
+        }
+      )}
+    </Breadcrumb>
   );
 }

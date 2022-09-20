@@ -1,0 +1,11 @@
+{
+  "folders": [
+    {
+      "name": "✨ voucher-tatry",
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "../node_modules/typescript/lib"
+  }
+}

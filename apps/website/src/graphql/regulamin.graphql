@@ -1,12 +1,11 @@
 query Regulamin {
-  regulamin {
-    data {
-      attributes {
-        sekcja {
-          id
-          tytul
-          opis
-        }
+  page(where: { id: "cl3n5ap7pc33n0eujlbvabwpl" }) {
+    pageTitle
+    sections {
+      id
+      title
+      description {
+        markdown
       }
     }
   }
