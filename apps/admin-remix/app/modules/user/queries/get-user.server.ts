@@ -1,4 +1,5 @@
-import { Profile, User } from "@prisma/client";
+import type { Profile, User } from "@prisma/client";
+
 import { db } from "~/core/database";
 
 export type TUser = User & { profile: Profile | null };

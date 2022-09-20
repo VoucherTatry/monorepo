@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type AnyObject = Record<string, unknown>;
+
 export type As<Props = any> = React.ElementType<Props>;
 
 export type PropsOf<T extends As> = React.ComponentPropsWithoutRef<T> & {
@@ -10,21 +13,24 @@ export type OmitCommonProps<
 > = Omit<Target, 'as' | OmitAdditionalProps>;
 
 export type RightJoinProps<
-  SourceProps extends object = {},
-  OverrideProps extends object = {}
+  SourceProps extends object = AnyObject,
+  OverrideProps extends object = AnyObject
 > = OmitCommonProps<SourceProps, keyof OverrideProps> & OverrideProps;
 
 export type MergeWithAs<
   ComponentProps extends object,
   AsProps extends object,
-  AdditionalProps extends object = {},
+  AdditionalProps extends object = AnyObject,
   AsComponent extends As = As
 > = RightJoinProps<ComponentProps, AdditionalProps> &
   RightJoinProps<AsProps, AdditionalProps> & {
     as?: AsComponent;
   };
 
-export type ComponentWithAs<Component extends As, Props extends object = {}> = {
+export type ComponentWithAs<
+  Component extends As,
+  Props extends object = AnyObject
+> = {
   <AsComponent extends As = Component>(
     props: MergeWithAs<
       React.ComponentProps<Component>,
@@ -45,5 +51,7 @@ export type PolymorphicProps<T extends As, P> = Omit<PropsOf<T>, 'ref'> &
     as?: As;
   };
 
-export interface PolymorphicComponent<T extends As, P = {}>
-  extends ComponentWithAs<T, {} & P> {}
+export type PolymorphicComponent<T extends As, P = AnyObject> = ComponentWithAs<
+  T,
+  AnyObject & P
+>;

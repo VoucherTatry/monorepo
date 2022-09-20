@@ -1,6 +1,7 @@
 import { Role } from "@prisma/client";
 import create from "zustand";
-import { TUser } from "~/modules/user/queries";
+
+import type { TUser } from "~/modules/user/queries";
 
 export type StoreState = {
   user: TUser | null;

@@ -9,10 +9,7 @@ export const Breadcrumbs = () => {
 
   return (
     <nav aria-label="Breadcrumb">
-      <ol
-        role="list"
-        className="flex items-center space-x-1 text-sm text-stone-500"
-      >
+      <ol className="flex items-center space-x-1 text-sm text-stone-500">
         {breadcrumbs.map((match, index) => (
           <li
             key={index}

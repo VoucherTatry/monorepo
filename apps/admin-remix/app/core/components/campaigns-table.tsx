@@ -1,10 +1,11 @@
-import { useNavigate } from "@remix-run/react";
 import { memo } from "react";
+
+import { useNavigate } from "@remix-run/react";
 import { Th, Table, THead, EmptyRow, Checkbox, Td, Tr } from "ui";
 
 // import { PostgrestError } from "@supabase/supabase-js";
 // import { formatISO9075 } from "date-fns";
-import { ICampaigns } from "~/modules/campaign/queries";
+import type { ICampaigns } from "~/modules/campaign/queries";
 
 const CampaignDataRow: React.FC<{
   campaign: ICampaigns;
@@ -69,7 +70,7 @@ export function CampaignsTableBody({ campaigns }: { campaigns: ICampaigns[] }) {
           key={campaign.id}
           campaign={campaign}
           checked={false}
-          onChecked={() => {}}
+          onChecked={() => void 0}
         />
       ))}
     </>

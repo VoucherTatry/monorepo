@@ -6,6 +6,7 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
     'prettier',
   ],
   settings: {
@@ -27,6 +28,8 @@ module.exports = {
     'no-console': 'warn',
     'arrow-body-style': ['warn', 'as-needed'],
     'react/jsx-filename-extension': 'off',
+    'react/jsx-no-comment-textnodes': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
     // @typescript-eslint
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
@@ -37,6 +40,12 @@ module.exports = {
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-throw-literal': 'off', // for CatchBoundaries
+    '@typescript-eslint/object-curly-spacing': 'off',
+    '@typescript-eslint/quotes': 'off',
+    '@typescript-eslint/semi': 'off',
+    '@typescript-eslint/space-before-blocks': 'off',
+    '@typescript-eslint/space-before-function-paren': 'off',
+    '@typescript-eslint/space-infix-ops': 'off',
     //import
     'import/no-default-export': 'error',
     'import/order': [
@@ -67,9 +76,16 @@ module.exports = {
         './app/entry.server.tsx',
         './app/routes/**/*.tsx',
         './src/pages/**/*.tsx',
+        './src/pages/**/*.ts',
       ],
       rules: {
         'import/no-default-export': 'off',
+      },
+    },
+    {
+      files: ['./**/*.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
       },
     },
   ],

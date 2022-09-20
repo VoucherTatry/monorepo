@@ -1,5 +1,5 @@
-import { Form } from "@remix-run/react";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { Form } from "@remix-run/react";
 import { Button } from "ui";
 
 export function LogoutButton() {

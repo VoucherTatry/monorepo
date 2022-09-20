@@ -5,6 +5,7 @@ import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
+import { Input } from "ui";
 import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
@@ -12,7 +13,6 @@ import { commitAuthSession } from "~/core/auth/session.server";
 import type { Location } from "~/core/database";
 import { assertIsPost } from "~/core/utils/http.server";
 import { createCampaign } from "~/modules/campaign/mutations";
-import { Input } from "ui";
 
 export const NewCampaignFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -83,13 +83,13 @@ export default function NewCampaignPage() {
 
   const titleRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
-  const priceRef = React.useRef<HTMLInputElement>(null);
-  const discountRef = React.useRef<HTMLInputElement>(null);
-  const startDateRef = React.useRef<HTMLInputElement>(null);
-  const endDateRef = React.useRef<HTMLInputElement>(null);
-  const latRef = React.useRef<HTMLInputElement>(null);
-  const lngRef = React.useRef<HTMLInputElement>(null);
-  const zoomRef = React.useRef<HTMLInputElement>(null);
+  // const priceRef = React.useRef<HTMLInputElement>(null);
+  // const discountRef = React.useRef<HTMLInputElement>(null);
+  // const startDateRef = React.useRef<HTMLInputElement>(null);
+  // const endDateRef = React.useRef<HTMLInputElement>(null);
+  // const latRef = React.useRef<HTMLInputElement>(null);
+  // const lngRef = React.useRef<HTMLInputElement>(null);
+  // const zoomRef = React.useRef<HTMLInputElement>(null);
 
   const inputProps = useFormInputProps(NewCampaignFormSchema);
   const transition = useTransition();

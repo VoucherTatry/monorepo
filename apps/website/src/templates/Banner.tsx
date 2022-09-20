@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { CTABanner } from '../components/CTABanner';
 import { LinkButton } from '../components/LinkButton';
-import { Banner as BannerType } from '../generated/graphql';
+import type { Banner as BannerType } from '../generated/graphql';
 import { Section } from '../layout/Section';
 
 const Banner = (props: Partial<BannerType>) => (

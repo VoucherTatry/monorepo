@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import FooterIconListClassNames from './FooterIconList.module.css';
 

@@ -1,8 +1,6 @@
-import { ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 
-import clsx from 'clsx';
-
-import ButtonClassNames from '../Button.module.css';
 import { Button, Input } from 'ui';
 
 type IHeroEmailInputProps = {

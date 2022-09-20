@@ -1,6 +1,7 @@
-import { useTransition } from "@remix-run/react";
 import type { ReactElement, RefObject } from "react";
 import { useEffect, useRef } from "react";
+
+import { useTransition } from "@remix-run/react";
 
 export function useProgress(): RefObject<HTMLDivElement> {
   const el = useRef<HTMLDivElement>(null);
@@ -19,10 +20,10 @@ export function useProgress(): RefObject<HTMLDivElement> {
 
     elCurrent.style.width = `0%`;
 
-    let updateWidth = (ms: number) => {
+    const updateWidth = (ms: number) => {
       timeout.current = setTimeout(() => {
-        let width = parseFloat(elCurrent.style.width);
-        let percent = !isNaN(width) ? 10 + 0.9 * width : 0;
+        const width = parseFloat(elCurrent.style.width);
+        const percent = !isNaN(width) ? 10 + 0.9 * width : 0;
 
         elCurrent!.style.width = `${percent}%`;
 
@@ -53,7 +54,7 @@ export function useProgress(): RefObject<HTMLDivElement> {
   return el;
 }
 
-function Progress(): ReactElement {
+export function Progress(): ReactElement {
   const progress = useProgress();
 
   return (
@@ -65,5 +66,3 @@ function Progress(): ReactElement {
     </div>
   );
 }
-
-export default Progress;

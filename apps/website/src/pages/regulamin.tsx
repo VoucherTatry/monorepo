@@ -1,6 +1,6 @@
 import { dehydrate, QueryClient } from 'react-query';
 
-import PrintMarkdown from '../components/PrintMarkdown';
+import { PrintMarkdown } from '../components/PrintMarkdown';
 import { useRegulaminQuery } from '../generated/graphql';
 import { graphqlClient } from '../graphql/client';
 import { Section } from '../layout/Section';

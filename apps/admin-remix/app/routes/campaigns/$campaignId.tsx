@@ -11,7 +11,8 @@ import { commitAuthSession } from "~/core/auth/session.server";
 import { assertIsDelete } from "~/core/utils/http.server";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import { deleteCampaign } from "~/modules/campaign/mutations";
-import { getUserCampaignById, UserCampaign } from "~/modules/campaign/queries";
+import type { UserCampaign } from "~/modules/campaign/queries";
+import { getUserCampaignById } from "~/modules/campaign/queries";
 
 type LoaderData = {
   campaign: UserCampaign;
@@ -64,7 +65,7 @@ function Categories({
 
   return (
     <>
-      {categories.map((cat: any) => (
+      {categories.map((cat) => (
         <span
           key={cat.id}
           className="rounded-full border border-stone-300 bg-stone-300 px-2 py-1 text-xs font-medium text-stone-800"

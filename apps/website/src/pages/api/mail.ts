@@ -1,5 +1,5 @@
 import mail from '@sendgrid/mail';
-import { NextApiHandler } from 'next';
+import type { NextApiHandler } from 'next';
 
 mail.setApiKey(process.env.SENDGRID_API_KEY ?? '');
 

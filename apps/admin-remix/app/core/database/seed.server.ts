@@ -1,5 +1,8 @@
-import { Category, PrismaClient, Role } from "@prisma/client";
+/* eslint-disable no-console */
+import type { Category } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
+
 import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "../utils/env.server";
 
 if (!SUPABASE_URL) {

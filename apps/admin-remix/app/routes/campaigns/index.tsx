@@ -1,17 +1,18 @@
 // import { BreadcrumbLink } from "@chakra-ui/react";
-import type { LoaderFunction } from "@remix-run/node";
-import { Link, NavLink } from "@remix-run/react";
-import { LinkButton } from "ui";
 import { GlobeEuropeAfricaIcon } from "@heroicons/react/24/outline";
+import type { LoaderFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
+import { LinkButton } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { ICampaigns, getCampaignsByUserId } from "~/modules/campaign/queries";
 import {
   CampaignsTable,
   CampaignsTableBody,
 } from "~/core/components/campaigns-table";
 import { notFound } from "~/core/utils/http.server";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import type { ICampaigns } from "~/modules/campaign/queries";
+import * as queries from "~/modules/campaign/queries";
 
 // export const handle = {
 //   breadcrumb: () => {
@@ -27,7 +28,7 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const { userId, email } = await requireAuthSession(request);
 
-  const campaigns = await getCampaignsByUserId({ userId });
+  const campaigns = await queries.getCampaignsByUserId({ userId });
 
   if (!campaigns) {
     throw notFound(`No user with id ${userId}`);

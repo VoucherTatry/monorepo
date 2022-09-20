@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 
-import {
+import type {
   MetaFunction,
   LinksFunction,
   LoaderFunction,
-  redirect,
 } from "@remix-run/node";
 import {
   Links,
@@ -18,12 +17,12 @@ import {
 import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./core/utils/env.server";
 import baseCss from "./styles/base.css";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import Progress from "~/core/components/Progress";
+import { getAuthSession } from "~/core/auth/session.server";
+import { Progress } from "~/core/components/Progress";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
-import { requireAuthSession } from "~/core/auth/guards";
-import { getUserByEmail, TUser } from "~/modules/user/queries";
 import { useUserStore } from "~/modules/store";
-import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
+import type { TUser } from "~/modules/user/queries";
+import { getUserByEmail } from "~/modules/user/queries";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: baseCss },

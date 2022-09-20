@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
-export default function PrintMarkdown({ markdown }: { markdown: string }) {
+export function PrintMarkdown({ markdown }: { markdown: string }) {
   const content = unified()
     .use(remarkParse)
     .use(remarkRehype)

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import CenteredFooterClassNames from './CenteredFooter.module.css';
 import { FooterCopyright } from './FooterCopyright';

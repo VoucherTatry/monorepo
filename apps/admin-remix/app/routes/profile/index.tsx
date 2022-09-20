@@ -1,17 +1,7 @@
-// import { BreadcrumbLink } from "@chakra-ui/react";
-import type { LoaderFunction } from "@remix-run/node";
-import { Link, NavLink } from "@remix-run/react";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
-import { GlobeEuropeAfricaIcon, PencilIcon } from "@heroicons/react/24/outline";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { ICampaigns, getCampaignsByUserId } from "~/modules/campaign/queries";
-import {
-  CampaignsTable,
-  CampaignsTableBody,
-} from "~/core/components/campaigns-table";
-import { notFound } from "~/core/utils/http.server";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import { useUserStore } from "~/modules/store";
 
 // export const handle = {

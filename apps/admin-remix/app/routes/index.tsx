@@ -1,9 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { NavLink, useLoaderData } from "@remix-run/react";
-import { useEffect } from "react";
-import { requireAuthSession } from "~/core/auth/guards";
+import { NavLink } from "@remix-run/react";
 
+import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
 import { useUserStore } from "~/modules/store";
 import { getUserByEmail } from "~/modules/user/queries";

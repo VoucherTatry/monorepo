@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { dehydrate, QueryClient } from 'react-query';
 import { ScrollXContainer, Voucher } from 'ui';
 
-import PrintMarkdown from '../components/PrintMarkdown';
+import { PrintMarkdown } from '../components/PrintMarkdown';
 import { useHomePageQuery } from '../generated/graphql';
 import { graphqlClient } from '../graphql/client';
 import { Section } from '../layout/Section';
@@ -38,10 +38,9 @@ const Index = () => {
   const finalCategories = useMemo(
     () =>
       categories?.filter((cat) => {
-        if (!cat) return;
-        if (!cat.kafelek) return;
+        if (!cat) return false;
+        if (!cat.kafelek) return false;
 
-        // eslint-disable-next-line consistent-return
         return true;
       }),
     [categories]

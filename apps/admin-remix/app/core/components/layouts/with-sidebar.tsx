@@ -1,8 +1,5 @@
 import { useState } from "react";
 
-import { Link, useLocation } from "@remix-run/react";
-import clsx from "clsx";
-
 import {
   FolderIcon as Folder,
   GlobeEuropeAfricaIcon as Globe,
@@ -10,15 +7,14 @@ import {
   TagIcon as Tag,
   UsersIcon as Users,
 } from "@heroicons/react/24/outline";
-// import { Button, HamburgerMenuButton } from 'ui';
+import { Link, useLocation } from "@remix-run/react";
+import clsx from "clsx";
+import { Button } from "ui";
 
 import { Breadcrumbs } from "~/core/components/breadcrumbs";
 import { LogoHorizontal } from "~/core/components/logo";
 import { LogoutButton } from "~/core/components/logout-button";
-import { useStore } from "zustand";
 import { useUserStore } from "~/modules/store";
-import { Button } from "ui";
-import { Role } from "@prisma/client";
 
 function SidebarMenuItem({
   children,

@@ -1,4 +1,5 @@
-import { Category, User } from "@prisma/client";
+import type { Category, User } from "@prisma/client";
+
 import { db } from "~/core/database";
 
 const CAMPAIGNS_SELECT = {

@@ -4,14 +4,12 @@ import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
+import { Input } from "ui";
 import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import type { Location } from "~/core/database";
 import { assertIsPost } from "~/core/utils/http.server";
-import { createCampaign } from "~/modules/campaign/mutations";
-import { Input } from "ui";
 import { createProfile } from "~/modules/user/mutations/create-profile.server";
 
 export const ProfileFormSchema = z.object({

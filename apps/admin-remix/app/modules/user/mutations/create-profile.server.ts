@@ -1,4 +1,5 @@
-import { Profile } from "@prisma/client";
+import type { Profile } from "@prisma/client";
+
 import { db } from "~/core/database";
 
 export async function createProfile({

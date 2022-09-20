@@ -1,6 +1,6 @@
 import { Background } from '../components/background/Background';
 import { HeroEmailInput } from '../components/hero/HeroEmailInput';
-import { Hero as HeroTypr } from '../generated/graphql';
+import type { Hero as HeroTypr } from '../generated/graphql';
 import { Section } from '../layout/Section';
 
 const Hero = (props: Partial<HeroTypr>) => (

@@ -1,4 +1,4 @@
-import type { Campaign, Prisma, User } from "@prisma/client";
+import type { Campaign, User } from "@prisma/client";
 
 import type { Location } from "~/core/database";
 import { db } from "~/core/database";

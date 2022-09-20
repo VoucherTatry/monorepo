@@ -14,15 +14,15 @@ import {
   useTransition,
 } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
+import { Button, Divider, Input } from "ui";
 import { z } from "zod";
 
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { ContinueWithEmailForm } from "~/core/components";
+import { AuthFormWrapper } from "~/core/components/layouts/auth-form-wrapper";
 import { assertIsPost } from "~/core/utils/http.server";
 import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
-import { AuthFormWrapper } from "~/core/components/layouts/auth-form-wrapper";
-import { Button, Divider, Input } from "ui";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
