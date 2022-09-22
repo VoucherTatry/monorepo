@@ -2,8 +2,11 @@ import React from 'react';
 
 import clsx from 'clsx';
 
-import { ComponentWithAs, PolymorphicProps } from '../PolymorphicComponent';
-import { TWidth } from '../tailwind-types';
+import type { TWidth } from '../../tailwind-types';
+import type {
+  ComponentWithAs,
+  PolymorphicProps,
+} from '../PolymorphicComponent';
 
 type CustomProps = {
   size?: 'xl' | 'lg' | 'md' | 'sm' | 'xs';

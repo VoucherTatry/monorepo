@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { useNavigate } from "@remix-run/react";
-import { Th, Table, THead, EmptyRow, Checkbox, Td, Tr } from "ui";
+import { Th, Table, THead, EmptyRow, Td, Tr } from "ui";
 
 // import { PostgrestError } from "@supabase/supabase-js";
 // import { formatISO9075 } from "date-fns";
@@ -23,13 +23,6 @@ const CampaignDataRow: React.FC<{
       className="cursor-pointer"
       onClick={goToCampaign}
     >
-      <Td className="sticky left-0 bg-white text-center group-odd:bg-stone-50">
-        <Checkbox
-          label={campaign.title}
-          checked={checked}
-          onChange={() => onChecked()}
-        />
-      </Td>
       <Td>
         <span className="relative text-left font-bold text-stone-900 before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-primary-500 before:transition group-hover:text-primary-500 group-hover:transition-colors group-hover:before:scale-x-100 group-hover:before:delay-200">
           {campaign.title}
@@ -82,9 +75,6 @@ export function CampaignsTable({ children }: React.PropsWithChildren) {
     <>
       <Table>
         <THead>
-          <th className="sticky left-0 bg-stone-300 p-4 text-center">
-            <Checkbox label="Wybierz wszystkie" />
-          </th>
           <Th>Nazwa</Th>
           <Th>Początek</Th>
           <Th>Koniec</Th>

@@ -130,7 +130,10 @@ const SideMenu: React.FC = () => {
 export function WithSidebar({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const user = useUserStore((store) => store.user);
+  const { user, isAdmin } = useUserStore((store) => ({
+    user: store.user,
+    isAdmin: store.isAdmin(),
+  }));
 
   const location = useLocation();
   const isRootPage =
@@ -179,9 +182,14 @@ export function WithSidebar({ children }: { children: React.ReactNode }) {
             />
           </div>
           {user && (
-            <Link to={`/profile/${user.id}`}>
-              {user.profile?.companyName ?? user.email}
-            </Link>
+            <div className="flex space-x-4">
+              <Link to={`/profile/${user.id}`}>
+                {user.profile?.companyName ?? user.email}
+              </Link>
+              <span className="rounded-full border border-stone-300 bg-stone-300 px-3 py-1 text-xs font-medium text-stone-800">
+                {isAdmin && "Admin"}
+              </span>
+            </div>
           )}
           {!isRootPage && (
             <div className="hidden text-stone-900 lg:block">

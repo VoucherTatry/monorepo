@@ -2,9 +2,9 @@ import React from 'react';
 
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import { Alert, Spinner } from '../index';
 
-import { TBackgroundColor, TPadding } from '../tailwind-types';
+import type { TBackgroundColor, TPadding } from '../../tailwind-types';
+import { Alert, Spinner } from '../index';
 
 export const LoadingRow: React.FC<{ colSpan?: number }> = function LoadingRow({
   colSpan,
@@ -37,11 +37,18 @@ export const EmptyRow: React.FC<{ message: string; colSpan?: number }> =
     );
   };
 
-interface ITHead extends React.HTMLAttributes<HTMLTableSectionElement> {}
+interface ITHead
+  extends Omit<React.HTMLAttributes<HTMLTableSectionElement>, 'className'> {
+  className?: Omit<string, TBackgroundColor>;
+}
 
-export const THead: React.FC<ITHead> = function THead({ children, ...rest }) {
+export const THead: React.FC<ITHead> = function THead({
+  children,
+  className,
+  ...rest
+}) {
   return (
-    <thead className="bg-stone-300" {...rest}>
+    <thead className={clsx('bg-stone-300', className)} {...rest}>
       <tr>{children}</tr>
     </thead>
   );
