@@ -1,18 +1,22 @@
 // import { BreadcrumbLink } from "@chakra-ui/react";
 import { GlobeEuropeAfricaIcon } from "@heroicons/react/24/outline";
+import { Role } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
+import { notFound } from "~/core/utils/http.server";
+import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import {
   CampaignsTable,
   CampaignsTableBody,
-} from "~/core/components/campaigns-table";
-import { notFound } from "~/core/utils/http.server";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
+} from "~/modules/campaign/components/campaigns-table";
 import type { ICampaigns } from "~/modules/campaign/queries";
-import * as queries from "~/modules/campaign/queries";
+import {
+  getCampaignsByUserId,
+  getAllCampaigns,
+} from "~/modules/campaign/queries";
 
 // export const handle = {
 //   breadcrumb: () => {
@@ -21,20 +25,27 @@ import * as queries from "~/modules/campaign/queries";
 // };
 
 type LoaderData = {
-  email: string;
   campaigns: ICampaigns[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { userId, email } = await requireAuthSession(request);
+  const { userId, user } = await requireAuthSession(request);
+  const isAdmin = [Role.ADMIN, Role.SUPER_ADMIN].some(
+    (role) => role === user?.role
+  );
 
-  const campaigns = await queries.getCampaignsByUserId({ userId });
-
-  if (!campaigns) {
-    throw notFound(`No user with id ${userId}`);
+  let campaigns: ICampaigns[];
+  if (isAdmin) {
+    campaigns = await getAllCampaigns();
+  } else {
+    campaigns = await getCampaignsByUserId({ userId });
   }
 
-  return json({ email, campaigns });
+  if (!campaigns) {
+    throw notFound(`No campaigns for user with id ${userId}`);
+  }
+
+  return json({ campaigns });
 };
 
 export default function CampaignsIndexPage() {

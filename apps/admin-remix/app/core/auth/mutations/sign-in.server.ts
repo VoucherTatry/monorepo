@@ -1,7 +1,7 @@
+import { mapAuthSession } from "../utils/map-auth-session";
 import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
 import { SERVER_URL } from "~/core/utils/env.server";
-
-import { mapAuthSession } from "../utils/map-auth-session";
+import { getUserById } from "~/modules/user/queries";
 
 export async function signInWithEmail(email: string, password: string) {
   const { data, error } = await supabaseAdmin.auth.api.signInWithEmail(
@@ -11,7 +11,9 @@ export async function signInWithEmail(email: string, password: string) {
 
   if (!data || error) return null;
 
-  return mapAuthSession(data);
+  const user = await getUserById(data.user?.id);
+
+  return mapAuthSession(data, user);
 }
 
 export async function sendMagicLink(email: string) {

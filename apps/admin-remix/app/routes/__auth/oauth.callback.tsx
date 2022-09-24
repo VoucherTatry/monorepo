@@ -11,7 +11,7 @@ import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
 import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client";
 import { assertIsPost, safeRedirect } from "~/core/utils/http.server";
 import { tryCreateUser } from "~/modules/user/mutations";
-import { getUserByEmail } from "~/modules/user/queries";
+import { getUserById } from "~/modules/user/queries";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
@@ -54,33 +54,46 @@ export const action: ActionFunction = async ({ request }) => {
   const { redirectTo, ...authSession } = form.data;
   const safeRedirectTo = safeRedirect(redirectTo, "/");
 
-  // user have un account, skip creation part and just commit session
-  if (await getUserByEmail(authSession.email)) {
+  const user = await getUserById(authSession.userId);
+
+  // first time sign in, let's create a brand-new User row in supabase
+  if (!user) {
+    const newUser = await tryCreateUser({
+      email: authSession.email,
+      userId: authSession.userId,
+    });
+
+    if (!newUser) {
+      return json<ActionData>(
+        {
+          message: "create-user-error",
+        },
+        { status: 500 }
+      );
+    }
+
     return redirect(safeRedirectTo, {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
-          authSession,
+          authSession: {
+            ...authSession,
+            user: {
+              ...newUser,
+              profile: null,
+            },
+          },
         }),
       },
     });
   }
 
-  // first time sign in, let's create a brand-new User row in supabase
-  const user = await tryCreateUser(authSession);
-
-  if (!user) {
-    return json<ActionData>(
-      {
-        message: "create-user-error",
-      },
-      { status: 500 }
-    );
-  }
-
   return redirect(safeRedirectTo, {
     headers: {
       "Set-Cookie": await commitAuthSession(request, {
-        authSession,
+        authSession: {
+          ...authSession,
+          user,
+        },
       }),
     },
   });
@@ -103,7 +116,7 @@ export default function LoginCallback() {
           // supabase auth listener gives us a user session, based on what it founds in this fragment url
           // we can't use it directly, client-side, because we can't access sessionStorage from here
           // so, we map what we need, and let's back-end to the work
-          const authSession = mapAuthSession(supabaseSession);
+          const authSession = mapAuthSession(supabaseSession, null);
 
           if (!authSession) return;
 

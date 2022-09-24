@@ -1,21 +1,22 @@
-// import { BreadcrumbLink } from "@chakra-ui/react";
-import type { LoaderFunction, ActionFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { useState } from "react";
+
+import { TrashIcon } from "@heroicons/react/24/outline";
+import type { LoaderFunction } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
-// import { formatISO9075 } from "date-fns";
 import invariant from "tiny-invariant";
+import { Button } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-// import { db } from "~/core/database";
-import { assertIsDelete } from "~/core/utils/http.server";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
-import { deleteCampaign } from "~/modules/campaign/mutations";
+import { DeleteConfirmModal } from "~/modules/campaign/components/delete-confirm-modal";
 import type { UserCampaign } from "~/modules/campaign/queries";
-import { getUserCampaignById } from "~/modules/campaign/queries";
+import { getCampaignById } from "~/modules/campaign/queries";
+import { getUserDisplayName, isAdmin } from "~/modules/user/helpers";
+import type { IUser } from "~/modules/user/queries";
 
 type LoaderData = {
   campaign: UserCampaign;
+  user: IUser | null;
 };
 
 // export const handle = {
@@ -31,29 +32,15 @@ type LoaderData = {
 // };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { userId } = await requireAuthSession(request);
   invariant(params.campaignId, "campaignId not found");
 
-  const campaign = await getUserCampaignById({ userId, id: params.campaignId });
+  const { user } = await requireAuthSession(request);
+  const campaign = await getCampaignById({ user, id: params.campaignId });
   if (!campaign) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json<LoaderData>({ campaign });
-};
 
-export const action: ActionFunction = async ({ request, params }) => {
-  assertIsDelete(request);
-
-  const authSession = await requireAuthSession(request);
-  invariant(params.campaignId, "campaignId not found");
-
-  await deleteCampaign({ userId: authSession.userId, id: params.campaignId });
-
-  return redirect("/campaigns", {
-    headers: {
-      "Set-Cookie": await commitAuthSession(request, { authSession }),
-    },
-  });
+  return json<LoaderData>({ campaign, user });
 };
 
 function Categories({
@@ -78,49 +65,75 @@ function Categories({
 }
 
 export default function Campaign() {
-  const { campaign } = useLoaderData<LoaderData>();
+  const { campaign, user } = useLoaderData<LoaderData>();
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+  function showDialog() {
+    setConfirmDialogOpen(true);
+  }
+  function dismissDialog() {
+    setConfirmDialogOpen(false);
+  }
 
   return (
-    <div>
-      <div className="flex flex-col space-y-6 px-3 py-4 lg:space-y-12 lg:px-6 lg:py-8">
-        <div className="flex flex-col justify-between space-y-6 lg:flex-row lg:space-y-0">
-          <div className="flex flex-col justify-center">
-            <h2 className="text-2xl font-semibold">{campaign.title}</h2>
-            <div className="flex space-x-2">
-              <Categories categories={campaign.categories} />
-            </div>
-          </div>
-          <div className="flex items-center space-x-3 text-lg">
-            <span>{new Date(campaign.startDate).toISOString()}</span>
-            <span>-</span>
-            {campaign.endDate && (
-              <span>{new Date(campaign.endDate).toISOString()}</span>
-            )}
-            {!campaign.endDate && <span>Do odwołania</span>}
-          </div>
+    <>
+      <DeleteConfirmModal
+        campaignId={campaign.id}
+        onDismiss={dismissDialog}
+        isOpen={confirmDialogOpen}
+      />
+      <div className="flex flex-col space-y-4">
+        <div className="flex items-center justify-between">
+          {isAdmin(user?.role) && (
+            <span className="text-stone-700">
+              {getUserDisplayName(campaign.user)}
+            </span>
+          )}
+          <Button onClick={showDialog}>
+            <TrashIcon className="w-5 h-5" />
+          </Button>
         </div>
-        <div className="flex w-full flex-col space-y-6 lg:mx-auto lg:w-3/5 lg:space-y-12">
-          <div className="relative mx-auto h-60 w-[25rem] max-w-full overflow-hidden rounded-md bg-stone-300">
-            <div className="absolute bottom-0 flex h-16 w-full items-center bg-black opacity-60">
-              <span className="ml-auto flex items-end space-x-1 px-4 text-right text-3xl font-bold leading-none text-white">
-                <span>{campaign.price?.toString()}</span>
-                <span className="self-end text-xl">zł</span>
-              </span>
+        <div className="flex flex-col space-y-6 px-3 py-4 lg:space-y-12 lg:px-6 lg:py-8">
+          <div className="flex flex-col justify-between space-y-6 lg:flex-row lg:space-y-0">
+            <div className="flex flex-col justify-center">
+              <h2 className="text-2xl font-semibold">{campaign.title}</h2>
+              <div className="flex space-x-2">
+                <Categories categories={campaign.categories} />
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 text-lg">
+              <span>{new Date(campaign.startDate).toISOString()}</span>
+              <span>-</span>
+              {campaign.endDate && (
+                <span>{new Date(campaign.endDate).toISOString()}</span>
+              )}
+              {!campaign.endDate && <span>Do odwołania</span>}
             </div>
           </div>
-          <div className="flex flex-col space-y-8">
-            <div className="flex flex-col space-y-2">
-              <h3 className="text-xl font-semibold opacity-60">Informacje</h3>
-              <p>{campaign.body}</p>
+          <div className="flex w-full flex-col space-y-6 lg:mx-auto lg:w-3/5 lg:space-y-12">
+            <div className="relative mx-auto h-60 w-[25rem] max-w-full overflow-hidden rounded-md bg-stone-300">
+              <div className="absolute bottom-0 flex h-16 w-full items-center bg-black opacity-60">
+                <span className="ml-auto flex items-end space-x-1 px-4 text-right text-3xl font-bold leading-none text-white">
+                  <span>{campaign.price?.toString()}</span>
+                  <span className="self-end text-xl">zł</span>
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col space-y-8">
+              <div className="flex flex-col space-y-2">
+                <h3 className="text-xl font-semibold opacity-60">Informacje</h3>
+                <p>{campaign.body}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div className="divider divider-vertical" />
-          <h3 className="text-xl font-semibold">Wygenerowane vouchery</h3>
+          <div>
+            <div className="divider divider-vertical" />
+            <h3 className="text-xl font-semibold">Wygenerowane vouchery</h3>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

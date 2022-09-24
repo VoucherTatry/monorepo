@@ -1,6 +1,7 @@
 import type { Category, User } from "@prisma/client";
 
 import { db } from "~/core/database";
+import type { IUser } from "~/modules/user/queries";
 
 const CAMPAIGNS_SELECT = {
   id: true,
@@ -8,6 +9,11 @@ const CAMPAIGNS_SELECT = {
   startDate: true,
   endDate: true,
   categories: true,
+  user: {
+    include: {
+      profile: true,
+    },
+  },
 };
 
 export interface ICampaigns {
@@ -16,6 +22,7 @@ export interface ICampaigns {
   startDate: Date;
   endDate: Date | null;
   categories: Category[];
+  user: IUser;
 }
 
 export async function getCampaignsByUserId({

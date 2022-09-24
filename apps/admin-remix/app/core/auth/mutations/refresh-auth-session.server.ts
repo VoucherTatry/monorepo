@@ -1,16 +1,16 @@
 import { redirect } from "@remix-run/node";
 
+import { LOGIN_URL } from "../const";
+import type { AuthSession } from "../session.server";
+import { getAuthSession, commitAuthSession } from "../session.server";
+import { mapAuthSession } from "../utils/map-auth-session";
 import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
 import {
   getCurrentPath,
   isGet,
   makeRedirectToFromHere,
 } from "~/core/utils/http.server";
-
-import { LOGIN_URL } from "../const";
-import type { AuthSession } from "../session.server";
-import { getAuthSession, commitAuthSession } from "../session.server";
-import { mapAuthSession } from "../utils/map-auth-session";
+import { getUserById } from "~/modules/user/queries";
 
 async function refreshAccessToken(refreshToken?: string) {
   if (!refreshToken) return null;
@@ -21,7 +21,9 @@ async function refreshAccessToken(refreshToken?: string) {
 
   if (!data || error) return null;
 
-  return mapAuthSession(data);
+  const user = await getUserById(data.user?.id);
+
+  return mapAuthSession(data, user);
 }
 
 export async function refreshAuthSession(

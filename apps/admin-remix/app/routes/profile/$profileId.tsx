@@ -9,7 +9,7 @@ import { LinkButton } from "ui";
 import { requireAuthSession } from "~/core/auth/guards";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import { useUserStore } from "~/modules/store";
-import type { TUser } from "~/modules/user/queries";
+import type { IUser } from "~/modules/user/queries";
 import { getUserById } from "~/modules/user/queries";
 
 // export const handle = {
@@ -20,7 +20,7 @@ import { getUserById } from "~/modules/user/queries";
 
 type LoaderData = {
   currentUserId: string;
-  user: TUser;
+  user: IUser;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {

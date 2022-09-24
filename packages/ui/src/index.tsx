@@ -13,3 +13,5 @@ export * from './Table';
 export * from './Loading/Spinner';
 
 export * from './Divider';
+
+export * from './Modals';

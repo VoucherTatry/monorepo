@@ -1,9 +1,8 @@
-import { isGet } from "~/core/utils/http.server";
-
 import { refreshAuthSession } from "../mutations/refresh-auth-session.server";
 import { getAuthAccountByAccessToken } from "../queries/get-auth-account.server";
 import type { AuthSession } from "../session.server";
 import { assertAuthSession } from "./assert-auth-session.server";
+import { isGet } from "~/core/utils/http.server";
 
 async function verifyAuthSession(authSession: AuthSession) {
   const authAccount = await getAuthAccountByAccessToken(

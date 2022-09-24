@@ -1,21 +1,40 @@
-import type { Campaign, Category, User } from "@prisma/client";
+import type { Campaign, Category } from "@prisma/client";
 
 import { db } from "~/core/database";
+import { isAdmin } from "~/modules/user/helpers";
+import type { IUser } from "~/modules/user/queries";
 
 export type UserCampaign = Campaign & {
   categories: Category[];
+  user: IUser;
 };
 
-export async function getUserCampaignById({
-  userId,
+const CAMPAIGN_INCLUDE_FIELDS = {
+  categories: true,
+  user: {
+    include: {
+      profile: true,
+    },
+  },
+};
+
+export async function getCampaignById({
+  user,
   id,
 }: Pick<Campaign, "id"> & {
-  userId: User["id"];
+  user: IUser | null;
 }): Promise<UserCampaign | null> {
+  if (!user) return null;
+
+  if (isAdmin(user.role)) {
+    return db.campaign.findUnique({
+      where: { id },
+      include: CAMPAIGN_INCLUDE_FIELDS,
+    });
+  }
+
   return db.campaign.findFirst({
-    where: { id, userId },
-    include: {
-      categories: true,
-    },
+    where: { id, userId: user.id },
+    include: CAMPAIGN_INCLUDE_FIELDS,
   });
 }

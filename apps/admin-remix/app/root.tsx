@@ -21,7 +21,7 @@ import { getAuthSession } from "~/core/auth/session.server";
 import { Progress } from "~/core/components/Progress";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import { useUserStore } from "~/modules/store";
-import type { TUser } from "~/modules/user/queries";
+import type { IUser } from "~/modules/user/queries";
 import { getUserByEmail } from "~/modules/user/queries";
 
 export const links: LinksFunction = () => [
@@ -46,7 +46,7 @@ export const meta: MetaFunction = () => ({
 });
 
 type LoaderData = {
-  user: TUser | null;
+  user: IUser | null;
   ENV: {
     SUPABASE_URL: string;
     SUPABASE_ANON_PUBLIC?: string;

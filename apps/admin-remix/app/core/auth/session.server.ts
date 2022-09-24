@@ -3,6 +3,7 @@ import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { NODE_ENV, SESSION_SECRET } from "../utils/env.server";
 import { safeRedirect } from "../utils/http.server";
 import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
+import type { IUser } from "~/modules/user/queries";
 
 if (!SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
@@ -15,6 +16,7 @@ export interface AuthSession {
   email: string;
   expiresIn: number;
   expiresAt: number;
+  user: IUser | null;
 }
 
 export type RealtimeAuthSession = Pick<

@@ -1,11 +1,10 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { NavLink } from "@remix-run/react";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
-import { useUserStore } from "~/modules/store";
-import { getUserByEmail } from "~/modules/user/queries";
+import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import type { IUser } from "~/modules/user/queries";
 
 export const handle = {
   breadcrumb: () => {
@@ -13,11 +12,12 @@ export const handle = {
   },
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const { email } = await requireAuthSession(request);
-  const user = await getUserByEmail(email);
+type LoaderData = { user: IUser | null };
 
-  return json(user);
+export const loader: LoaderFunction = async ({ request }) => {
+  const { user } = await requireAuthSession(request);
+
+  return json<LoaderData>({ user });
 };
 
 export const meta: MetaFunction = () => ({
@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function Index() {
-  const user = useUserStore((store) => store.user);
+  const { user } = useLoaderData<LoaderData>();
 
   return (
     <WithSidebar>Hello {user?.profile?.companyName ?? user?.email}</WithSidebar>

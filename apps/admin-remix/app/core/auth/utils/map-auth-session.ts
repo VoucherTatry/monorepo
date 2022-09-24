@@ -1,9 +1,10 @@
-import type { SupabaseAuthSession } from "~/core/integrations/supabase/types";
-
 import type { AuthSession } from "../session.server";
+import type { SupabaseAuthSession } from "~/core/integrations/supabase/types";
+import type { IUser } from "~/modules/user/queries";
 
 export function mapAuthSession(
-  supabaseAuthSession: SupabaseAuthSession | null
+  supabaseAuthSession: SupabaseAuthSession | null,
+  user: IUser | null
 ): AuthSession | null {
   if (!supabaseAuthSession) return null;
 
@@ -14,5 +15,6 @@ export function mapAuthSession(
     email: supabaseAuthSession.user?.email ?? "",
     expiresIn: supabaseAuthSession.expires_in ?? -1,
     expiresAt: supabaseAuthSession.expires_at ?? -1,
+    user: user,
   };
 }

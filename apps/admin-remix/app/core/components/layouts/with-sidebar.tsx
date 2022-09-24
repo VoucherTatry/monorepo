@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "@remix-run/react";
 import clsx from "clsx";
-import { Button } from "ui";
+import { HamburgerMenuButton } from "ui";
 
 import { Breadcrumbs } from "~/core/components/breadcrumbs";
 import { LogoHorizontal } from "~/core/components/logo";
@@ -173,22 +173,26 @@ export function WithSidebar({ children }: { children: React.ReactNode }) {
         onClick={toggleSidebar}
       ></div>
       <div className="flex w-full flex-1 flex-col overflow-hidden">
-        <header className="z-40 flex w-full items-center justify-between bg-stone-800 px-6 py-4 text-stone-100 shadow-md lg:bg-transparent lg:text-stone-900 lg:shadow-none">
+        <header className="z-40 flex w-full items-center justify-between bg-stone-800 px-6 py-4 text-stone-100 shadow-md lg:bg-transparent lg:text-stone-900 lg:shadow-none space-x-4">
           <div className="flex items-center lg:hidden">
-            <Button
-              onClick={toggleSidebar}
-              // isToggled={sidebarOpen}
-              // onToggle={toggleSidebar}
+            <HamburgerMenuButton
+              isToggled={sidebarOpen}
+              onToggle={toggleSidebar}
             />
           </div>
           {user && (
-            <div className="flex space-x-4">
-              <Link to={`/profile/${user.id}`}>
+            <div className="flex space-x-4 items-center">
+              <Link
+                className="leading-none"
+                to={`/profile/${user.id}`}
+              >
                 {user.profile?.companyName ?? user.email}
               </Link>
-              <span className="rounded-full border border-stone-300 bg-stone-300 px-3 py-1 text-xs font-medium text-stone-800">
-                {isAdmin && "Admin"}
-              </span>
+              {isAdmin && (
+                <span className="rounded-full border border-stone-300 bg-stone-300 px-2 py-0.5 text-xs font-medium text-stone-800">
+                  Admin
+                </span>
+              )}
             </div>
           )}
           {!isRootPage && (
