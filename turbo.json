@@ -3,7 +3,18 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**", "build/**"]
+    },
+    "admin-remix#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "DATABASE_URL",
+        "SUPABASE_ANON_PUBLIC",
+        "SUPABASE_SERVICE_ROLE",
+        "SUPABASE_URL",
+        "SESSION_SECRET",
+        "SERVER_URL"
+      ]
     },
     "lint": {
       "outputs": []

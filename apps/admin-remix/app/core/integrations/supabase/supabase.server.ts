@@ -1,13 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
+import type { SupabaseClient } from "./types";
 import {
   NODE_ENV,
   SERVER_URL,
   SUPABASE_SERVICE_ROLE,
   SUPABASE_URL,
 } from "~/core/utils/env.server";
-
-import type { SupabaseClient } from "./types";
 
 declare global {
   // eslint-disable-next-line no-var
