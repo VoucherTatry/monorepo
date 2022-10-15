@@ -3,7 +3,7 @@ import type { Category } from "@prisma/client";
 import { PrismaClient, Role } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 
-import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "../utils/env.server";
+import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "~/core/utils/env.server";
 
 if (!SUPABASE_URL) {
   throw new Error("SUPABASE_URL is not set");
@@ -14,8 +14,10 @@ if (!SUPABASE_SERVICE_ROLE) {
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-  autoRefreshToken: false,
-  persistSession: false,
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
 });
 
 const prisma = new PrismaClient();
@@ -23,19 +25,21 @@ const prisma = new PrismaClient();
 const email = "hello@supabase.com";
 
 const getUserId = async (): Promise<string> => {
-  const existingUserId = await supabaseAdmin.auth.api
+  const existingUserId = await supabaseAdmin.auth.admin
     .listUsers()
-    .then(({ data }) => data?.find((user) => user.email === email)?.id);
+    .then(
+      ({ data: { users } }) => users?.find((user) => user.email === email)?.id
+    );
 
   if (existingUserId) return existingUserId;
 
-  const newUserId = await supabaseAdmin.auth.api
+  const newUserId = await supabaseAdmin.auth.admin
     .createUser({
       email,
       password: "supabase",
       email_confirm: true,
     })
-    .then(({ user }) => user?.id);
+    .then(({ data: { user } }) => user?.id);
 
   if (newUserId) return newUserId;
 

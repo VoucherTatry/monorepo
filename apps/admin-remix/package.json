@@ -23,7 +23,8 @@
     "setup:wait-shadow-db": "dotenv -- node ./wait-shadow-db-setup.js",
     "start": "remix-serve build",
     "start:mocks": "dotenv -- binode --require ./mocks -- @remix-run/serve:remix-serve build",
-    "check-types": "tsc --noEmit --pretty"
+    "check-types": "tsc --noEmit --pretty",
+    "postinstall": "pnpm prisma generate --schema ./prisma/schema.prisma"
   },
   "prettier": {
     "singleAttributePerLine": true
@@ -70,10 +71,10 @@
     "typescript": "^4.8.4"
   },
   "engines": {
-    "node": "16.17.0"
+    "node": "v16"
   },
   "prisma": {
-    "schema": "app/core/database/schema.prisma",
-    "seed": "ts-node --require tsconfig-paths/register app/core/database/seed.server.ts"
+    "schema": "prisma/schema.prisma",
+    "seed": "ts-node --require tsconfig-paths/register prisma/seed.server.ts"
   }
 }

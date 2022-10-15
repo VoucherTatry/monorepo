@@ -10,8 +10,8 @@ if (!SESSION_SECRET) {
 }
 
 export interface AuthSession {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
   userId: string;
   email: string;
   expiresIn: number;
@@ -21,7 +21,7 @@ export interface AuthSession {
 
 export type RealtimeAuthSession = Pick<
   AuthSession,
-  "accessToken" | "expiresIn" | "expiresAt"
+  "access_token" | "expiresIn" | "expiresAt"
 >;
 
 /**

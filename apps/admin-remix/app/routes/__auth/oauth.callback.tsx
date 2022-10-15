@@ -31,8 +31,8 @@ export const action: ActionFunction = async ({ request }) => {
   assertIsPost(request);
 
   const schema = z.object({
-    accessToken: z.string(),
-    refreshToken: z.string(),
+    access_token: z.string(),
+    refresh_token: z.string(),
     userId: z.string(),
     email: z.string().email(),
     redirectTo: z.string().optional(),
@@ -135,7 +135,7 @@ export default function LoginCallback() {
 
     return () => {
       // prevent memory leak. Listener stays alive 👨‍🎤
-      authListener?.unsubscribe();
+      authListener?.subscription?.unsubscribe();
     };
   }, [fetcher, redirectTo]);
 

@@ -6,7 +6,7 @@ import { isGet } from "~/core/utils/http.server";
 
 async function verifyAuthSession(authSession: AuthSession) {
   const authAccount = await getAuthAccountByAccessToken(
-    authSession.accessToken
+    authSession.access_token
   );
 
   return Boolean(authAccount);

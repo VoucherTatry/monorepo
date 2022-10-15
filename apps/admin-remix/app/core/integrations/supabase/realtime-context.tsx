@@ -3,12 +3,11 @@ import { createContext, useContext, useState } from "react";
 
 import { useFetcher } from "@remix-run/react";
 
+import { getSupabaseClient } from "./supabase.client";
+import type { SupabaseClient } from "./types";
 import type { RealtimeAuthSession } from "~/core/auth/session.server";
 import { useInterval, useMatchesData } from "~/core/hooks";
 import { isBrowser } from "~/core/utils/is-browser";
-
-import { getSupabaseClient } from "./supabase.client";
-import type { SupabaseClient } from "./types";
 
 // Remix feature here, we can "watch" root loader data
 function useOptionalRealtimeSession(): Partial<RealtimeAuthSession> {
@@ -28,7 +27,7 @@ export const SupabaseRealtimeProvider = ({
   children: ReactElement;
 }) => {
   // what root loader data returns
-  const { accessToken, expiresIn, expiresAt } = useOptionalRealtimeSession();
+  const { access_token, expiresIn, expiresAt } = useOptionalRealtimeSession();
   const [currentExpiresAt, setCurrentExpiresAt] = useState<
     number | undefined
   >();
@@ -58,7 +57,11 @@ export const SupabaseRealtimeProvider = ({
     const client = getSupabaseClient();
 
     // if user is authenticated, set credential
-    if (accessToken) client.auth.setAuth(accessToken);
+    if (access_token)
+      client.auth.setSession({
+        access_token: access_token,
+        refresh_token: access_token,
+      });
 
     // refresh provider's state
     setCurrentExpiresAt(expiresAt);

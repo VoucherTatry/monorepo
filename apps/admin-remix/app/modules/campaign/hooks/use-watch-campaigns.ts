@@ -10,13 +10,13 @@ export function useWatchCampaigns() {
 
   useEffect(() => {
     const subscription = supabase
-      .from("Campaign")
-      .on("INSERT", () => {
-        submit(null, { replace: true });
-      })
-      .on("DELETE", () => {
-        submit(null, { replace: true });
-      })
+      .channel("Campaign")
+      // .on("INSERT", () => {
+      //   submit(null, { replace: true });
+      // })
+      // .on("DELETE", () => {
+      //   submit(null, { replace: true });
+      // })
       .subscribe();
 
     return () => {

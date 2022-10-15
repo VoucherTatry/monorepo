@@ -12,18 +12,16 @@ import {
 } from "~/core/utils/http.server";
 import { getUserById } from "~/modules/user/queries";
 
-async function refreshAccessToken(refreshToken?: string) {
-  if (!refreshToken) return null;
+async function refreshAccessToken(session: AuthSession | null) {
+  if (!session) return null;
 
-  const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(
-    refreshToken
-  );
+  const { data, error } = await supabaseAdmin.auth.setSession(session);
 
   if (!data || error) return null;
 
   const user = await getUserById(data.user?.id);
 
-  return mapAuthSession(data, user);
+  return mapAuthSession(data.session, user);
 }
 
 export async function refreshAuthSession(
@@ -31,9 +29,7 @@ export async function refreshAuthSession(
 ): Promise<AuthSession> {
   const authSession = await getAuthSession(request);
 
-  const refreshedAuthSession = await refreshAccessToken(
-    authSession?.refreshToken
-  );
+  const refreshedAuthSession = await refreshAccessToken(authSession);
 
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token

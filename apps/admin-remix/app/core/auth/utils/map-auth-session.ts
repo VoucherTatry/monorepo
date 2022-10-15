@@ -9,8 +9,8 @@ export function mapAuthSession(
   if (!supabaseAuthSession) return null;
 
   return {
-    accessToken: supabaseAuthSession.access_token,
-    refreshToken: supabaseAuthSession.refresh_token ?? "",
+    access_token: supabaseAuthSession.access_token,
+    refresh_token: supabaseAuthSession.refresh_token ?? "",
     userId: supabaseAuthSession.user?.id ?? "",
     email: supabaseAuthSession.user?.email ?? "",
     expiresIn: supabaseAuthSession.expires_in ?? -1,

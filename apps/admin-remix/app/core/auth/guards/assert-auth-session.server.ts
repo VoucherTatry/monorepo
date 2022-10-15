@@ -11,7 +11,7 @@ export async function assertAuthSession(
   const authSession = await getAuthSession(request);
 
   // If there is no user session, Fly, You Fools! 🧙‍♂️
-  if (!authSession?.accessToken || !authSession?.refreshToken) {
+  if (!authSession?.access_token || !authSession?.refresh_token) {
     throw redirect(
       `${onFailRedirectTo || LOGIN_URL}?${makeRedirectToFromHere(request)}`,
       {

@@ -20,7 +20,7 @@ export function getPublicFileURL(filePath: string, bucketName: string) {
     .from(bucketName)
     .getPublicUrl(filePath);
 
-  return url?.publicURL;
+  return url?.publicUrl;
 }
 
 export interface UploadOptions {

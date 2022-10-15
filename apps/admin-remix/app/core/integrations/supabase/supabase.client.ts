@@ -12,8 +12,10 @@ export function getSupabaseClient() {
     window.ENV.SUPABASE_URL,
     window.ENV.SUPABASE_ANON_PUBLIC,
     {
-      autoRefreshToken: false,
-      persistSession: false,
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
     }
   );
 }

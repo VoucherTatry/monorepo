@@ -33,8 +33,10 @@ function getSupabaseAdmin() {
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE,
     {
-      autoRefreshToken: false,
-      persistSession: false,
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
     }
   );
 }
