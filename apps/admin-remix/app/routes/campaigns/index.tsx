@@ -1,6 +1,5 @@
 // import { BreadcrumbLink } from "@chakra-ui/react";
 import { GlobeEuropeAfricaIcon } from "@heroicons/react/24/outline";
-import { Role } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
@@ -17,6 +16,7 @@ import {
   getCampaignsByUserId,
   getAllCampaigns,
 } from "~/modules/campaign/queries";
+import { isAdmin } from "~/modules/user/helpers";
 
 // export const handle = {
 //   breadcrumb: () => {
@@ -30,12 +30,9 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { userId, user } = await requireAuthSession(request);
-  const isAdmin = [Role.ADMIN, Role.SUPER_ADMIN].some(
-    (role) => role === user?.role
-  );
 
   let campaigns: ICampaigns[];
-  if (isAdmin) {
+  if (isAdmin(user?.role)) {
     campaigns = await getAllCampaigns();
   } else {
     campaigns = await getCampaignsByUserId({ userId });

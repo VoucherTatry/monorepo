@@ -1,7 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -45,10 +45,12 @@ model Campaign {
   endDate   DateTime?
   location  Json
 
-  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId               String
-  CategoriesOnCampaign CategoriesOnCampaign[]
-  vouchers             Voucher[]
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+
+  categories Category[]
+
+  vouchers Voucher[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -70,21 +72,10 @@ model Category {
   id   String @id @default(cuid())
   name String @unique
 
-  CategoriesOnCampaign CategoriesOnCampaign[]
+  campaigns Campaign[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model CategoriesOnCampaign {
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
-  campaignId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
-
-  assignedAt DateTime @default(now())
-
-  @@id([campaignId, categoryId])
 }
 
 model Page {

@@ -1,15 +1,12 @@
-// import type { Prisma } from "@prisma/client";
+import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
-// import { NODE_ENV } from "../utils/env.server";
+export interface Location extends Prisma.JsonObject {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
 
-// export interface Location extends Prisma.JsonObject {
-//   lat: number;
-//   lng: number;
-//   zoom: number;
-// }
-
-// eslint-disable-next-line import/no-mutable-exports
 let prisma: PrismaClient;
 
 declare global {

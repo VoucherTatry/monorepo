@@ -102,13 +102,13 @@ const SideMenu: React.FC = () => {
               Strefa administratora
             </h4>
 
-            <SidebarMenuItem pathname="/strona_internetowa">
+            {/* <SidebarMenuItem pathname="/strona_internetowa">
               <div className="flex items-center space-x-2 lg:space-x-4">
                 <Globe className="-6 h-6 shrink-0" />
                 <span>Strona internetowa</span>
               </div>
-            </SidebarMenuItem>
-            <SidebarMenuItem pathname="/kategorie">
+            </SidebarMenuItem> */}
+            <SidebarMenuItem pathname="/categories">
               <div className="flex items-center space-x-2 lg:space-x-4">
                 <Folder className="h-6 w-6 shrink-0" />
                 <span>Kategorie</span>
