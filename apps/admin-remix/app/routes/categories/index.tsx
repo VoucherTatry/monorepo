@@ -13,8 +13,6 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireAuthSession(request);
-
   const categories = await getCategories();
 
   return json({ categories });

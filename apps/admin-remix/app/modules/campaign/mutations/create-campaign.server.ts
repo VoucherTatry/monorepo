@@ -1,16 +1,6 @@
-import type { Campaign, User } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-import type { Location } from "~/core/database";
 import { db } from "~/core/database";
-
-type CreateCampaignData = Pick<
-  Campaign,
-  "body" | "title" | "price" | "discount" | "startDate" | "endDate"
-> & {
-  userId: User["id"];
-} & {
-  location: Location;
-};
 
 export async function createCampaign({
   title,
@@ -20,8 +10,11 @@ export async function createCampaign({
   startDate,
   endDate,
   location,
-  userId,
-}: CreateCampaignData) {
+  user,
+}: Prisma.CampaignCreateArgs["data"]) {
+  if (!location)
+    throw new Error("Lokalizacja jest wymagana do utworzenia oferty!");
+
   return db.campaign.create({
     data: {
       title,
@@ -31,11 +24,7 @@ export async function createCampaign({
       startDate,
       endDate,
       location,
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
+      user,
     },
   });
 }

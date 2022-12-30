@@ -20,25 +20,25 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@tailwindcss/typography": "^0.5.7",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
-    "autoprefixer": "^10.4.12",
-    "eslint": "^8.25.0",
+    "@tailwindcss/typography": "^0.5.8",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
-    "postcss": "^8.4.18",
+    "postcss": "^8.4.19",
     "shared-config": "workspace:*",
-    "tailwindcss-classnames": "^3.0.6",
+    "tailwindcss-classnames": "^3.0.7",
     "tsconfig": "workspace:*",
-    "tsup": "^6.2.3",
-    "typescript": "^4.8.4",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.3",
     "typescript-plugin-css-modules": "^3.4.0"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.3",
-    "@heroicons/react": "^2.0.12",
+    "@headlessui/react": "^1.7.4",
+    "@heroicons/react": "^2.0.13",
     "clsx": "^1.2.1",
     "react": "^18.2.0",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.2.4"
   }
 }

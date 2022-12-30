@@ -12,6 +12,7 @@ import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client"
 import { assertIsPost, safeRedirect } from "~/core/utils/http.server";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserById } from "~/modules/user/queries";
+import { Spinner } from "ui";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
@@ -139,5 +140,5 @@ export default function LoginCallback() {
     };
   }, [fetcher, redirectTo]);
 
-  return error ? <div>{error.message}</div> : null;
+  return error ? <div>{error.message}</div> : <Spinner size="lg" />;
 }

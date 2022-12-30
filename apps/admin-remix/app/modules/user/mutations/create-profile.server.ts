@@ -1,4 +1,4 @@
-import type { Profile } from "@prisma/client";
+import type { Prisma, Profile } from "@prisma/client";
 
 import { db } from "~/core/database";
 
@@ -7,12 +7,14 @@ export async function createProfile({
   lastName,
   companyName,
   userId,
-}: Profile) {
+  location,
+}: Prisma.ProfileCreateArgs["data"]) {
   return db.profile.create({
     data: {
       firstName,
       lastName,
       companyName,
+      location,
       user: {
         connect: {
           id: userId,

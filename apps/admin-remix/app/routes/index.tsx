@@ -1,23 +1,17 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { NavLink } from "@remix-run/react";
+import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
-import type { IUser } from "~/modules/user/queries";
-
-export const handle = {
-  breadcrumb: () => {
-    <NavLink to="/">Strona domowa</NavLink>;
-  },
-};
-
-type LoaderData = { user: IUser | null };
+import useAppData from "~/core/hooks/use-app-data";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { user } = await requireAuthSession(request);
 
-  return json<LoaderData>({ user });
+  if (user && !user.profile) {
+    return redirect(`/users/${user.id}/edit`);
+  }
+
+  return null;
 };
 
 export const meta: MetaFunction = () => ({
@@ -25,7 +19,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function Index() {
-  const { user } = useLoaderData<LoaderData>();
+  const { user } = useAppData();
 
   return (
     <WithSidebar>Hello {user?.profile?.companyName ?? user?.email}</WithSidebar>

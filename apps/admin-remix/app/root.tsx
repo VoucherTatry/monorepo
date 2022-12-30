@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 
-import type {
+import {
   MetaFunction,
   LinksFunction,
   LoaderFunction,
+  redirect,
 } from "@remix-run/node";
 import {
   Links,
@@ -12,17 +13,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
+  useNavigate,
 } from "@remix-run/react";
 
-import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./core/utils/env.server";
-import baseCss from "./styles/base.css";
-import tailwindStylesheetUrl from "./styles/tailwind.css";
+import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "~/core/utils/env.server";
+import baseCss from "~/styles/base.css";
+import tailwindStylesheetUrl from "~/styles/tailwind.css";
 import { getAuthSession } from "~/core/auth/session.server";
 import { Progress } from "~/core/components/Progress";
 import { json, useLoaderData } from "~/core/utils/superjson-remix";
-import { useUserStore } from "~/modules/store";
-import type { IUser } from "~/modules/user/queries";
-import { getUserByEmail } from "~/modules/user/queries";
+import { getUserById, IUser } from "~/modules/user/queries";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: baseCss },
@@ -45,7 +46,7 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-type LoaderData = {
+export type RootData = {
   user: IUser | null;
   ENV: {
     SUPABASE_URL: string;
@@ -69,12 +70,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   //   },
   // });
   const authSession = await getAuthSession(request);
-  let user = null;
+
+  let user: IUser | null = null;
   if (authSession) {
-    user = await getUserByEmail(authSession?.email);
+    user = await getUserById(authSession?.userId);
   }
 
-  return json<LoaderData>({
+  return json<RootData>({
     user,
     ENV: {
       SUPABASE_URL,
@@ -88,21 +90,7 @@ interface DocumentProps {
 }
 
 const Document = ({ children }: DocumentProps) => {
-  const { ENV, user } = useLoaderData<LoaderData>();
-
-  const { storeUser, setUser } = useUserStore((store) => ({
-    storeUser: store.user,
-    setUser: store.setUser,
-  }));
-
-  useEffect(() => {
-    if (user && (!storeUser || storeUser?.id !== user?.id))
-      setUser({
-        ...user,
-        createdAt: new Date(user.createdAt),
-        updatedAt: new Date(user.updatedAt),
-      });
-  }, [user, storeUser, setUser]);
+  const { ENV } = useLoaderData<RootData>();
 
   return (
     <html lang="en">

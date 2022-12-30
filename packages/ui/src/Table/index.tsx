@@ -3,7 +3,7 @@ import React from 'react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
-import type { TBackgroundColor, TPadding } from '../../tailwind-types';
+import type { TBackgroundColor, TPadding, TWidth } from '../../tailwind-types';
 import { Alert, Spinner } from '../index';
 
 export const LoadingRow: React.FC<{ colSpan?: number }> = function LoadingRow({
@@ -88,18 +88,23 @@ export const Td: React.FC<ITd> = function Td({
 
 interface ITh extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {
   menu?: React.ReactNode;
+  width?: TWidth;
 }
 
 export const Th: React.FC<ITh> = function Th({
   children,
   menu,
   colSpan,
+  width,
   ...rest
 }) {
   return (
     <th
       colSpan={colSpan}
-      className="whitespace-nowrap p-4 text-left font-bold text-stone-900"
+      className={clsx(
+        'whitespace-nowrap p-4 text-left font-bold text-stone-900',
+        width
+      )}
       {...rest}
     >
       <div className="flex items-center">

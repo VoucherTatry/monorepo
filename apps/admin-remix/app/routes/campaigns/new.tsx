@@ -10,9 +10,9 @@ import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import type { Location } from "~/core/database";
 import { assertIsPost } from "~/core/utils/http.server";
 import { createCampaign } from "~/modules/campaign/mutations";
+import { Location } from "@prisma/client";
 
 export const NewCampaignFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -21,9 +21,14 @@ export const NewCampaignFormSchema = z.object({
   discount: z.number().int().positive("require-discount"),
   startDate: z.date(),
   endDate: z.date().optional(),
-  lat: z.number(),
-  lng: z.number(),
-  zoom: z.number(),
+  locationId: z.string().optional(),
+  location: z.object({
+    id: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    address: z.string(),
+    city: z.string(),
+  }),
 });
 
 type ActionData = {
@@ -56,8 +61,16 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { title, body, price, discount, startDate, endDate, lat, lng, zoom } =
-    formValidation.data;
+  const {
+    title,
+    body,
+    price,
+    discount,
+    startDate,
+    endDate,
+    location,
+    locationId,
+  } = formValidation.data;
   const hasPrice = price !== undefined;
 
   const campaign = await createCampaign({
@@ -67,8 +80,24 @@ export const action: ActionFunction = async ({ request }) => {
     discount,
     startDate,
     endDate: endDate ?? null,
-    location: { lat, lng, zoom },
-    userId: authSession.userId,
+    location: {
+      connectOrCreate: {
+        where: { id: locationId },
+        create: {
+          address: location.address,
+          city: location.city,
+          lat: location.lat,
+          lng: location.lng,
+          id: undefined,
+          profile: undefined,
+        },
+      },
+    },
+    user: {
+      connect: {
+        id: authSession.userId,
+      },
+    },
   });
 
   return redirect(`/campaigns/${campaign.id}`, {
@@ -204,7 +233,7 @@ export default function NewCampaignPage() {
       />
 
       <div className="flex space-x-2">
-        <Input
+        {/* <Input
           label="Szerokość geograficzna"
           error={actionData?.errors?.location?.lat.toString()}
           id="lat"
@@ -240,7 +269,7 @@ export default function NewCampaignPage() {
             actionData?.errors?.location?.zoom ? "discount-error" : undefined
           }
           disabled={disabled}
-        />
+        /> */}
       </div>
 
       <div className="text-right">

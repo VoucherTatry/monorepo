@@ -5,8 +5,8 @@ import { Th, Table, THead, EmptyRow, Td, Tr } from "ui";
 
 // import { PostgrestError } from "@supabase/supabase-js";
 import type { ICampaigns } from "~/modules/campaign/queries";
-import { useUserStore } from "~/modules/store";
 import { getUserDisplayName } from "~/modules/user/helpers";
+import useAppData from "~/core/hooks/use-app-data";
 
 type CategoryPillProps = Omit<
   React.HTMLAttributes<HTMLSpanElement>,
@@ -25,7 +25,7 @@ const CategoryPill: React.FC<CategoryPillProps> = (props) => (
 const CampaignDataRow: React.FC<{
   campaign: ICampaigns;
 }> = memo(function CampaignDataRow({ campaign }) {
-  const isAdmin = useUserStore((state) => state.isAdmin());
+  const { isAdmin } = useAppData();
   const navigate = useNavigate();
 
   function goToCampaign() {
@@ -82,7 +82,7 @@ export function CampaignsTableBody({ campaigns }: { campaigns: ICampaigns[] }) {
 }
 
 export function CampaignsTable({ children }: React.PropsWithChildren) {
-  const isAdmin = useUserStore((state) => state.isAdmin());
+  const { isAdmin } = useAppData();
 
   return (
     <>

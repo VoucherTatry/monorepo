@@ -11,10 +11,10 @@
     "access": "public"
   },
   "devDependencies": {
-    "@tailwindcss/aspect-ratio": "latest",
-    "@tailwindcss/forms": "latest",
-    "@tailwindcss/line-clamp": "latest",
-    "@tailwindcss/typography": "latest",
-    "tailwindcss": "latest"
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.8",
+    "tailwindcss": "^3.2.4"
   }
 }

@@ -2,22 +2,34 @@ import React from "react";
 
 import { useFetcher } from "@remix-run/react";
 import { Button, Input } from "ui";
+import { MagicLinkSubmitErrorsEnum } from "~/routes/__auth/send-magic-link";
 
-export function ContinueWithEmailForm() {
+const getErrorMessage = (err?: string): string | null => {
+  if (!err) return null;
+
+  switch (err) {
+    case (err = MagicLinkSubmitErrorsEnum.TOO_MANY):
+      return "Mail został przed chwilą wysłany. Proszę spróbować później.";
+    default:
+      return err;
+  }
+};
+
+export const ContinueWithEmailForm = () => {
   const ref = React.useRef<HTMLFormElement>(null);
   const sendMagicLink = useFetcher();
   const { data, state, type } = sendMagicLink;
-  const isSuccessFull = type === "done" && !data?.error;
+  const isSuccessfull = type === "done" && !data?.error;
   const isLoading = state === "submitting" || state === "loading";
   const buttonLabel = isLoading
     ? "Wysyłanie magicznego linku..."
     : "Wyślij magiczny link";
 
   React.useEffect(() => {
-    if (isSuccessFull) {
+    if (isSuccessfull) {
       ref.current?.reset();
     }
-  }, [isSuccessFull]);
+  }, [isSuccessfull]);
 
   return (
     <sendMagicLink.Form
@@ -37,10 +49,10 @@ export function ContinueWithEmailForm() {
       />
       <div
         className={`mb-2 h-6 text-sm ${data?.error ? "text-red-500" : ""} ${
-          isSuccessFull ? "text-green-600" : ""
+          isSuccessfull ? "text-green-600" : ""
         }`}
       >
-        {!isSuccessFull ? data?.error : "Check your emails ✌️"}
+        {!isSuccessfull ? getErrorMessage(data?.error) : "Sprawdź email! ✌️"}
       </div>
       <Button
         type="submit"
@@ -52,4 +64,4 @@ export function ContinueWithEmailForm() {
       </Button>
     </sendMagicLink.Form>
   );
-}
+};
