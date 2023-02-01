@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
-export default function EditProfile() {
+export default function NewProfile() {
   const actionData = useActionData() as ActionData;
 
   const firstNameRef = React.useRef<HTMLInputElement>(null);
@@ -115,46 +115,27 @@ export default function EditProfile() {
       >
         <div className="flex space-x-2">
           <Input
-            // {...inputProps("firstName")}
-            defaultValue={user?.profile?.firstName}
             type="text"
             id="firstName"
             label="Imię"
             ref={firstNameRef}
-            // error={actionData?.errors?.firstName}
-            // aria-invalid={actionData?.errors?.firstName ? true : undefined}
-            // aria-errormessage={
-            //   actionData?.errors?.firstName ? "firstName-error" : undefined
-            // }
             disabled={disabled}
           />
 
           <Input
-            // {...inputProps("lastName")}
-            defaultValue={user?.profile?.lastName}
             type="text"
             id="lastName"
             label="Nazwisko"
             ref={lastNameRef}
-            // aria-invalid={actionData?.errors?.lastName ? true : undefined}
-            // aria-errormessage={
-            //   actionData?.errors?.lastName ? "lastName-error" : undefined
-            // }
             disabled={disabled}
           />
         </div>
 
         <Input
-          // {...inputProps("companyName")}
-          defaultValue={user?.profile?.companyName}
           type="text"
           id="companyName"
           label="Nazwa firmy"
           ref={companyNameRef}
-          // aria-invalid={actionData?.errors?.companyName ? true : undefined}
-          // aria-errormessage={
-          //   actionData?.errors?.companyName ? "companyName-error" : undefined
-          // }
           disabled={disabled}
         />
 

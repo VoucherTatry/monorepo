@@ -1,5 +1,5 @@
 import { Heading } from '@chakra-ui/react';
-import { GlobeIcon } from '@heroicons/react/outline';
+import { GlobeEuropeAfricaIcon as GlobeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from 'ui';
 
@@ -13,8 +13,8 @@ export default function Campaigns() {
         <div className="flex justify-between">
           <Heading fontSize="3xl">Kategorie</Heading>
 
-          <Link href="/kategorie/nowa_kategoria" passHref>
-            <Button as="a" size="sm" display="flex" experimental_spaceX={1}>
+          <Link href="/kategorie/nowa_kategoria" passHref legacyBehavior={true}>
+            <Button size="sm">
               <GlobeIcon className="h-5 w-5" />+<span>Dodaj</span>
             </Button>
           </Link>

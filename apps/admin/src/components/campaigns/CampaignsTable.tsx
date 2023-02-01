@@ -1,18 +1,17 @@
 import { memo, useCallback } from 'react';
 
 import { useToast, Thead, Tbody, Tr, Th, Td, Checkbox } from '@chakra-ui/react';
-import { PostgrestError } from '@supabase/supabase-js';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { useQuery } from '@tanstack/react-query';
 import { formatISO9075 } from 'date-fns';
 import Link from 'next/link';
-import { useQuery } from 'react-query';
 import { LinkButton, Spinner } from 'ui';
 
+import Table, { EmptyRow, LoadingRow } from '../layouts/Table';
 import { findCampaignsByMerchantId, getAllCampaigns } from '~/lib/db/campaigns';
 import { useQueryFindCategoryById } from '~/lib/hooks/categories';
 import { useRouterMerchantId } from '~/lib/hooks/merchants';
 import type { Campaign } from '~/lib/types/campaigns';
-
-import Table, { EmptyRow, LoadingRow } from '../layouts/Table';
 
 const CampaignDataRow: React.FC<{
   campaign: Campaign;
@@ -36,8 +35,11 @@ const CampaignDataRow: React.FC<{
         />
       </Td>
       <Td>
-        <Link href={`/kampanie/${campaign.id}`} passHref>
-          <a className="btn btn-ghost text-left font-bold">{campaign.name}</a>
+        <Link
+          href={`/kampanie/${campaign.id}`}
+          className="btn btn-ghost text-left font-bold"
+        >
+          {campaign.name}
         </Link>
       </Td>
       <Td>{formatISO9075(new Date(campaign.date_start))}</Td>
@@ -48,7 +50,7 @@ const CampaignDataRow: React.FC<{
         {!isCategorySuccess || (!category && 'Brak kategorii')}
       </Td>
       <Td>
-        <Link href={`/kampanie/${campaign.id}`} passHref>
+        <Link href={`/kampanie/${campaign.id}`} passHref legacyBehavior>
           <LinkButton size="sm">więcej</LinkButton>
         </Link>
       </Td>
@@ -70,7 +72,7 @@ function CampaignsTableBody() {
   const { data, isError, error, isLoading } = useQuery<
     Campaign[] | null,
     PostgrestError
-  >('campaigns', fetchCampaigns);
+  >({ queryKey: ['campaigns'], queryFn: fetchCampaigns });
 
   if (isLoading) {
     return <LoadingRow colSpan={6} />;
@@ -103,7 +105,7 @@ function CampaignsTableBody() {
           key={campaign.id}
           campaign={campaign}
           checked={false}
-          onChecked={() => {}}
+          onChecked={() => void 0}
         />
       ))}
     </>

@@ -1,4 +1,5 @@
-import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
@@ -8,7 +9,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { user } = await requireAuthSession(request);
 
   if (user && !user.profile) {
-    return redirect(`/users/${user.id}/edit`);
+    return redirect(`/users/${user.id}/new-profile`);
   }
 
   return null;

@@ -1,6 +1,5 @@
 import { Box, Icon, HStack, Stack, Heading } from '@chakra-ui/react';
-import { UsersIcon } from '@heroicons/react/outline';
-import type { GetServerSideProps } from 'next';
+import { UsersIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { LinkButton } from 'ui';
 
@@ -22,7 +21,7 @@ export default function Homepage() {
         <Stack>
           <Heading fontSize="2xl">Klienci</Heading>
           <p>Klinkij aby przejść do listy klientów.</p>
-          <Link href="/klienci" passHref>
+          <Link href="/klienci" passHref legacyBehavior={true}>
             <LinkButton>Idź</LinkButton>
           </Link>
         </Stack>

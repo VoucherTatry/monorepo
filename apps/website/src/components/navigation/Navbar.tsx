@@ -19,10 +19,8 @@ const NavbarLink = ({
 }) => (
   <li className={NavbarClassNames['navbar-link']}>
     <div className={NavbarClassNames['navbar-link__bg']} />
-    <Link href={href} passHref>
-      <a onClick={onClick} className="z-10 drop-shadow">
-        {children}
-      </a>
+    <Link href={href} onClick={onClick} className="z-10 drop-shadow">
+      {children}
     </Link>
   </li>
 );
@@ -62,10 +60,8 @@ const Navbar = () => {
 
         <div className="relative flex h-20 flex-shrink-0 items-center md:h-24">
           <div className="absolute z-0 h-20 w-full bg-white blur-md filter md:h-24" />
-          <Link href="/" passHref>
-            <a className="z-10 px-4 drop-shadow">
-              <Logo xl />
-            </a>
+          <Link href="/" className="z-10 px-4 drop-shadow">
+            <Logo xl />
           </Link>
         </div>
       </div>

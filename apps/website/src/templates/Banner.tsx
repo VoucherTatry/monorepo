@@ -15,9 +15,7 @@ const Banner = (props: Partial<BannerType>) => (
       subtitle={props?.summary ?? 'Wpisz się na listę oczekujących już dziś'}
       button={
         <Link href="#" passHref>
-          <a>
-            <LinkButton>{props?.button ?? 'Dołączam'}</LinkButton>
-          </a>
+          <LinkButton>{props?.button ?? 'Dołączam'}</LinkButton>
         </Link>
       }
     />

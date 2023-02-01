@@ -44,10 +44,8 @@ const Voucher = (props: IVoucherProps) => {
   }
 
   return (
-    <Link href={props.href} passHref>
-      <a className="w-40 flex-shrink-0 md:w-56">
-        <VoucherContent {...props} />
-      </a>
+    <Link href={props.href} className="w-40 flex-shrink-0 md:w-56">
+      <VoucherContent {...props} />
     </Link>
   );
 };

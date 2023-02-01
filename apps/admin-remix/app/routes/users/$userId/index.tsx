@@ -1,17 +1,47 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
+
 import { useMatchesData } from "~/core/hooks";
-import { UserData } from "~/routes/users/$userId";
+import type { UserData } from "~/routes/users/$userId";
 
 export default function User() {
   const userData = useMatchesData<UserData>("routes/users/$userId");
   const user = userData?.user;
 
+  if (!user) {
+    return <h2>Brak informacji o użytkowniku!</h2>;
+  }
+
+  if (!user.profile) {
+    return (
+      <div className="flex flex-col space-y-4">
+        <div className="flex items-end justify-between">
+          <h2 className="flex flex-col text-3xl font-bold">
+            <span>Konto użytkownika:</span>
+            <span className="underline text-primary-500">{user?.email}</span>
+          </h2>
+
+          <LinkButton
+            as={Link}
+            to="new-profile"
+            size="sm"
+          >
+            <PencilIcon className="h-5 w-5" />
+            <span>Stwórz profil</span>
+          </LinkButton>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div className="flex items-end justify-between">
-        <h2 className="text-3xl font-bold">Konto użytkownika {user?.email}</h2>
+    <div className="flex flex-col space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="flex flex-col text-3xl font-bold">
+          <span>Konto użytkownika:</span>
+          <span className="underline text-primary-500">{user?.email}</span>
+        </h2>
 
         <LinkButton
           as={Link}
@@ -22,7 +52,28 @@ export default function User() {
           <span>Edytuj</span>
         </LinkButton>
       </div>
-      {JSON.stringify(user)}
-    </>
+      <div className="flex flex-col space-y-4">
+        <h3 className="text-2xl font-semibold">
+          Podstawowe informacje o użytkowniku:
+        </h3>
+        <div className="flex flex-col space-y-2">
+          <div className="flex flex-col">
+            <span className="text-sm text-stone-400 font-bold">Imię:</span>
+            <span>{user.profile.firstName}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm text-stone-400 font-bold">Nazwisko:</span>
+            <span>{user.profile.lastName}</span>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-sm text-stone-400 font-bold">
+              Nazwa firmy:
+            </span>
+            <span>{user.profile.companyName}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

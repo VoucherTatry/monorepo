@@ -59,16 +59,8 @@ export default function Merchant({ ssrError }: DehydratedStaticProps) {
               </div>
             </div>
             <div className="flex items-center justify-end">
-              <Link href={`/klienci/${merchant.id}/edytuj`} passHref>
-                <Button
-                  as="a"
-                  display="flex"
-                  variant="ghost"
-                  colorScheme="blackAlpha"
-                  color="gray.900"
-                  size="sm"
-                  experimental_spaceX={2}
-                >
+              <Link href={`/klienci/${merchant.id}/edytuj`}>
+                <Button>
                   <PencilIcon className="h-4 w-4" />
                   <span>Edytuj dane</span>
                 </Button>

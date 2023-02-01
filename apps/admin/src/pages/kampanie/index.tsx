@@ -1,5 +1,5 @@
 import { Heading, Stack, HStack } from '@chakra-ui/react';
-import { GlobeIcon } from '@heroicons/react/outline';
+import { GlobeEuropeAfricaIcon as GlobeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { LinkButton } from 'ui';
 
@@ -13,7 +13,7 @@ export default function Campaigns() {
         <HStack justifyContent="space-between">
           <Heading fontSize="3xl">Kampanie</Heading>
 
-          <Link href="/kampanie/nowa_kampania" passHref>
+          <Link href="/kampanie/nowa_kampania" passHref legacyBehavior={true}>
             <LinkButton size="sm">
               <GlobeIcon className="h-5 w-5" />+<span>Dodaj</span>
             </LinkButton>

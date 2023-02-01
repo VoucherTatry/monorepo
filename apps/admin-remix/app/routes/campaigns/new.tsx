@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import type { Location } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
 import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
@@ -12,7 +13,6 @@ import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
 import { assertIsPost } from "~/core/utils/http.server";
 import { createCampaign } from "~/modules/campaign/mutations";
-import { Location } from "@prisma/client";
 
 export const NewCampaignFormSchema = z.object({
   title: z.string().min(2, "require-title"),

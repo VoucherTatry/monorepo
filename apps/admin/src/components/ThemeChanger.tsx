@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useTheme } from 'next-themes';
 
@@ -8,7 +8,9 @@ if (typeof document !== 'undefined') {
 }
 
 export default function ThemeChanger() {
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+
   const switchTheme = useCallback(() => {
     if (theme === 'light') {
       setTheme('dark');
@@ -29,6 +31,9 @@ export default function ThemeChanger() {
       }
     }
   }, [theme]);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
     <label className="swap swap-rotate h-full w-full">

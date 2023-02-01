@@ -15,10 +15,11 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
             <h1 className="text-3xl font-bold">Zaloguj się</h1>
             <p className="text-stone-500">
               Nie posiadasz jeszcze konta?{' '}
-              <Link href="rejestracja" passHref>
-                <a className="text-primary-500 hover:focus:underline">
-                  Zarejestruj się
-                </a>
+              <Link
+                href="rejestracja"
+                className="text-primary-500 hover:focus:underline"
+              >
+                Zarejestruj się
               </Link>
             </p>
           </div>

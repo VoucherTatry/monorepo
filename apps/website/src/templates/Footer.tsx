@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
+import { Logo } from './Logo';
 import { Background } from '../components/background/Background';
 import { CenteredFooter } from '../components/footer/CenteredFooter';
 import { Section } from '../layout/Section';
-import { Logo } from './Logo';
 
 const Footer = () => (
   <Background color="bg-stone-100">
@@ -72,17 +72,17 @@ const Footer = () => (
       >
         <li>
           <Link href="/#" passHref>
-            <a>Home</a>
+            Home
           </Link>
         </li>
         <li>
           <Link href="/#o-nas" passHref>
-            <a>O nas</a>
+            O nas
           </Link>
         </li>
         <li>
           <Link href="/regulamin" passHref>
-            <a>Regulamin</a>
+            Regulamin
           </Link>
         </li>
       </CenteredFooter>

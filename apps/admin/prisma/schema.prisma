@@ -1,21 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-  role  Role   @default(CUSTOMER)
-
+  id        String     @id @default(cuid())
+  email     String     @unique
+  role      Role       @default(CUSTOMER)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   campaigns Campaign[]
   profile   Profile?
+}
 
+model Profile {
+  firstName   String
+  lastName    String
+  companyName String
+  userId      String    @unique
+  locationId  String?   @unique
+  location    Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Location {
+  id       String     @id @default(cuid())
+  lat      Float
+  lng      Float
+  address  String
+  city     String
+  campaign Campaign[]
+  profile  Profile?
+}
+
+model Campaign {
+  id         String     @id @default(cuid())
+  title      String
+  body       String
+  price      Decimal?
+  discount   Int
+  startDate  DateTime   @default(now())
+  endDate    DateTime?
+  locationId String
+  userId     String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vouchers   Voucher[]
+  categories Category[] @relation("CampaignToCategory")
+}
+
+model Voucher {
+  id         String   @id @default(cuid())
+  email      String?
+  timestamp  DateTime
+  voucher    String
+  campaignId String
+  createdAt  DateTime @default(now())
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  campaigns Campaign[] @relation("CampaignToCategory")
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String
+  blocks    Json
+  viewCount Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -24,67 +88,4 @@ enum Role {
   CUSTOMER
   ADMIN
   SUPER_ADMIN
-}
-
-model Profile {
-  firstName   String
-  lastName    String
-  companyName String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
-}
-
-model Campaign {
-  id        String    @id @default(cuid())
-  title     String
-  body      String
-  price     Decimal?
-  discount  Int
-  startDate DateTime  @default(now())
-  endDate   DateTime?
-  location  Json
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-
-  categories Category[]
-
-  vouchers Voucher[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Voucher {
-  id        String   @id @default(cuid())
-  email     String?
-  timestamp DateTime
-  voucher   String
-
-  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  campaignId String
-
-  createdAt DateTime @default(now())
-}
-
-model Category {
-  id   String @id @default(cuid())
-  name String @unique
-
-  campaigns Campaign[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Page {
-  id        String @id @default(cuid())
-  title     String
-  slug      String
-  blocks    Json
-  viewCount Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

@@ -1,6 +1,8 @@
+import { Suspense, useState } from 'react';
+
 import { ChakraProvider } from '@chakra-ui/react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { UserProvider } from '@supabase/auth-helpers-react';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import {
   Hydrate,
   QueryClient,
@@ -9,15 +11,19 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { chakraTheme } from 'ui';
+// import { chakraTheme } from 'ui';
 
 import '../styles/globals.css';
 
-const queryClient = new QueryClient();
-
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <UserProvider supabaseClient={supabaseClient}>
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
       <QueryClientProvider client={queryClient} contextSharing={true}>
         <Hydrate state={pageProps.dehydratedState}>
           <Head>
@@ -27,12 +33,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width"
             />
           </Head>
-          <ChakraProvider theme={chakraTheme}>
-            <Component {...pageProps} />
+          <ChakraProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Component {...pageProps} />
+            </Suspense>
           </ChakraProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </Hydrate>
       </QueryClientProvider>
-    </UserProvider>
+    </SessionContextProvider>
   );
 }

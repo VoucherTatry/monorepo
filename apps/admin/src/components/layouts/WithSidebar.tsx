@@ -11,13 +11,13 @@ import {
 } from '@chakra-ui/react';
 import {
   FolderIcon,
-  GlobeIcon,
+  GlobeEuropeAfricaIcon as GlobeIcon,
   HomeIcon,
-  LogoutIcon,
+  ArrowLeftOnRectangleIcon as LogoutIcon,
   TagIcon,
   UsersIcon,
-} from '@heroicons/react/outline';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+} from '@heroicons/react/24/outline';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ function SidebarMenuItem({
   return (
     <Flex as="li" flexDirection="column">
       <Box position="relative" px={6} py={1}>
-        <Link href={pathname} passHref>
+        <Link href={pathname} passHref legacyBehavior={true}>
           <ChakraLink
             display="inline-flex"
             w="full"
@@ -167,6 +167,7 @@ function WithSidebar({
   children: React.ReactNode;
   title: string;
 }) {
+  const supabaseClient = useSupabaseClient();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const router = useRouter();

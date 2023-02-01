@@ -6,8 +6,9 @@ import { parse, stringify } from "superjson";
 export const json = <Data>(
   obj: Data,
   init?: number | ResponseInit
-): TypedResponse<Data> => {
+): TypedResponse<string> => {
   const superJsonResult = stringify(obj);
+
   return remixJson(superJsonResult, init);
 };
 

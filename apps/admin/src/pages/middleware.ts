@@ -1,4 +1,5 @@
-import { NextMiddleware, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextMiddleware } from 'next/server';
 
 // export const middleware: NextMiddleware = withMiddlewareAuth({
 //   redirectTo: '/auth',

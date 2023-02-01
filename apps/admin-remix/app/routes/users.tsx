@@ -1,7 +1,8 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { requireAuthSession } from "~/core/auth/guards";
 
+import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
 import { isAdmin } from "~/modules/user/helpers";
 
@@ -10,10 +11,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (!user) return redirect("/");
 
-  const isUserProfile = new URL(request.url).pathname.startsWith(
+  const isUserProfilePage = new URL(request.url).pathname.startsWith(
     `/users/${user.id}`
   );
-  if (!isAdmin(user.role) && !isUserProfile) return redirect(user.id);
+  if (!isAdmin(user.role) && !isUserProfilePage) return redirect(user.id);
+
+  if (!user.profile && !isUserProfilePage) {
+    return redirect(`/users/${user.id}/new-profile`);
+  }
 
   return null;
 };

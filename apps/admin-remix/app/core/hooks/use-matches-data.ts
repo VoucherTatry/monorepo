@@ -18,7 +18,9 @@ export function useMatchesData<T>(id: string): T | undefined {
   );
 
   if (route) {
-    return parse<T>(route?.data as any) as T;
+    const parsed = parse<T>(route?.data as any) as T;
+
+    return parsed;
   }
 
   return undefined;

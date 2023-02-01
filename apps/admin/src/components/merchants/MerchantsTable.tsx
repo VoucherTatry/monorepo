@@ -10,10 +10,10 @@ import {
   Checkbox,
   ScaleFade,
 } from '@chakra-ui/react';
-import { TrashIcon } from '@heroicons/react/outline';
-import { PostgrestError } from '@supabase/supabase-js';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useMutation, useQuery } from 'react-query';
 import { Button, Spinner } from 'ui';
 
 import AlertDialog from '~/components/AlertDialog';
@@ -42,32 +42,27 @@ const MerchantDataRow: React.FC<{
         />
       </Td>
       <Td>
-        <Link href={`/klienci/${merchant.id}`} passHref>
-          <a className="btn btn-ghost text-left">
-            <div className="space-y-1">
-              <div className="font-bold">{merchant.name}</div>
-              <div className="text-sm opacity-50">
-                {merchant.phone}
-                {merchant.address && merchant.phone && ' | '}
-                {merchant.email}
-              </div>
+        <Link
+          href={`/klienci/${merchant.id}`}
+          className="btn btn-ghost text-left"
+        >
+          <div className="space-y-1">
+            <div className="font-bold">{merchant.name}</div>
+            <div className="text-sm opacity-50">
+              {merchant.phone}
+              {merchant.address && merchant.phone && ' | '}
+              {merchant.email}
             </div>
-          </a>
+          </div>
         </Link>
       </Td>
       <Td>{merchant.address}</Td>
       <Td>
-        {campaignsCountLoading ? (
-          <Spinner size="lg" thickness="3px" />
-        ) : (
-          count?.length ?? 0
-        )}
+        {campaignsCountLoading ? <Spinner size="lg" /> : count?.length ?? 0}
       </Td>
       <Td>
         <div className="flex justify-end">
-          <Link href={`/klienci/${merchant.id}`} passHref>
-            <a>więcej</a>
-          </Link>
+          <Link href={`/klienci/${merchant.id}`}>więcej</Link>
         </div>
       </Td>
     </Tr>
@@ -119,19 +114,19 @@ export default function MerchantsTable() {
   const { data, error, isError, isLoading } = useQuery<
     Merchant[] | null,
     PostgrestError
-  >('merchants', getAllMerchants);
+  >({ queryKey: ['merchants'], queryFn: getAllMerchants });
 
-  const deleteMerchants = useMutation(
-    'deleteMerchantsByIds',
-    ({ ids }: { ids: number[] | null }) => {
+  const deleteMerchants = useMutation({
+    mutationKey: ['deleteMerchantsByIds'],
+    mutationFn: ({ ids }: { ids: number[] | null }) => {
       if (!ids)
         return new Promise((resolve) => {
           resolve({ error: 'No ids provided' });
         });
 
       return deleteMerchantsByIds(ids);
-    }
-  );
+    },
+  });
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedMerchantIds, setSelectedMerchantIds] = useState<

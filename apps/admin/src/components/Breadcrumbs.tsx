@@ -138,7 +138,11 @@ export default function Breadcrumbs() {
 
           return (
             <BreadcrumbItem key={index} isCurrentPage={last}>
-              <Link href={breadcrumbElement.href} passHref>
+              <Link
+                href={breadcrumbElement.href}
+                passHref
+                legacyBehavior={true}
+              >
                 <BreadcrumbLink fontWeight={last ? 'bold' : undefined}>
                   {convertBreadcrumb(breadcrumbElement.breadcrumb)}
                 </BreadcrumbLink>

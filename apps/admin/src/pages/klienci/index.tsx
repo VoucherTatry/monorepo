@@ -1,5 +1,5 @@
 import { Heading, Stack, HStack } from '@chakra-ui/react';
-import { UserAddIcon } from '@heroicons/react/solid';
+import { UserPlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { Button } from 'ui';
 
@@ -13,9 +13,9 @@ export default function Merchants() {
         <HStack justifyContent="space-between">
           <Heading fontSize="3xl">Klienci</Heading>
 
-          <Link href="/klienci/nowy_klient" passHref>
-            <Button as="a" experimental_spaceX={1}>
-              <UserAddIcon className="h-6 w-6" />
+          <Link href="/klienci/nowy_klient">
+            <Button>
+              <UserPlusIcon className="h-6 w-6" />
               <span>Dodaj</span>
             </Button>
           </Link>

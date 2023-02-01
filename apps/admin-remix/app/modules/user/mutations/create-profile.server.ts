@@ -1,4 +1,4 @@
-import type { Prisma, Profile } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 import { db } from "~/core/database";
 
@@ -9,17 +9,22 @@ export async function createProfile({
   userId,
   location,
 }: Prisma.ProfileCreateArgs["data"]) {
-  return db.profile.create({
-    data: {
-      firstName,
-      lastName,
-      companyName,
-      location,
-      user: {
-        connect: {
-          id: userId,
-        },
+  const data: Prisma.ProfileCreateArgs["data"] = {
+    firstName,
+    lastName,
+    companyName,
+    location,
+    user: {
+      connect: {
+        id: userId,
       },
     },
+  };
+  return db.profile.upsert({
+    where: {
+      userId,
+    },
+    create: data,
+    update: data,
   });
 }

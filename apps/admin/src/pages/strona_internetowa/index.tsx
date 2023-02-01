@@ -35,14 +35,14 @@ export default function Website() {
           <Tbody bgColor="gray.50">
             <LinkBox as={Tr}>
               <Td _hover={{ bg: 'var(--chakra-colors-primary-200)' }}>
-                <Link href="/strona_internetowa" passHref>
+                <Link href="/strona_internetowa" passHref legacyBehavior={true}>
                   <LinkOverlay>Strona główna</LinkOverlay>
                 </Link>
               </Td>
             </LinkBox>
             <LinkBox as={Tr}>
               <Td>
-                <Link href="/strona_internetowa" passHref>
+                <Link href="/strona_internetowa" passHref legacyBehavior={true}>
                   <LinkOverlay>Regulamin</LinkOverlay>
                 </Link>
               </Td>
