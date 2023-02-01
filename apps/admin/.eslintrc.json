@@ -1,4 +1,5 @@
 {
   "root": true,
-  "extends": ["custom", "plugin:@next/next/recommended"]
+  "extends": ["custom"]
+  // "extends": ["custom", "plugin:@next/next/recommended"]
 }
