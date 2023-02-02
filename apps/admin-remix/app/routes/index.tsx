@@ -3,7 +3,7 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { WithSidebar } from "~/core/components/layouts/with-sidebar";
-import useAppData from "~/core/hooks/use-app-data";
+import { useAppData } from "~/core/hooks/use-app-data";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { user } = await requireAuthSession(request);

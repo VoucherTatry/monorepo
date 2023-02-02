@@ -16,16 +16,15 @@ import {
 
 import { getAuthSession } from "~/core/auth/session.server";
 import { Progress } from "~/core/components/Progress";
-import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "~/core/utils/env.server";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
 import { getUserById } from "~/modules/user/queries";
 import type { IUser } from "~/modules/user/queries";
-import baseCss from "~/styles/base.css";
-import tailwindStylesheetUrl from "~/styles/tailwind.css";
+import tailwindCSS from "~/tailwind.css";
+import { getBrowserEnv } from "~/utils/env";
+import { json, useLoaderData } from "~/utils/superjson-remix";
+// import baseCss from "~/styles/base.css";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: baseCss },
-  { rel: "stylesheet", href: tailwindStylesheetUrl },
+  { rel: "stylesheet", href: tailwindCSS },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   { rel: "preconnect", href: "https://fonts.gstatic.com" },
   {
@@ -76,10 +75,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   return json<RootData>({
     user,
-    ENV: {
-      SUPABASE_URL,
-      SUPABASE_ANON_PUBLIC,
-    },
+    ENV: getBrowserEnv(),
   });
 };
 
@@ -91,7 +87,7 @@ const Document = ({ children }: DocumentProps) => {
   const { ENV } = useLoaderData<RootData>();
 
   return (
-    <html lang="en">
+    <html lang="pl">
       <head>
         <Meta />
         <Links />

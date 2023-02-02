@@ -5,7 +5,7 @@ import { AuthLayout } from '~/components/auth-layout';
 
 const Login = () => (
   <AuthLayout>
-    <div className="flex w-full max-w-md flex-col space-y-8 lg:justify-center">
+    <div className="flex w-full max-w-md flex-col space-y-8 md:justify-center">
       <div className="flex flex-col space-y-4">
         <h1 className="text-4xl font-bold">Zaloguj się</h1>
 

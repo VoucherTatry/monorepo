@@ -2,6 +2,7 @@ import React from "react";
 
 import { useFetcher } from "@remix-run/react";
 import { Button, Input } from "ui";
+
 import { MagicLinkSubmitErrorsEnum } from "~/routes/__auth/send-magic-link";
 
 const getErrorMessage = (err?: string): string | null => {

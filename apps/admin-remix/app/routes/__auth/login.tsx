@@ -22,7 +22,7 @@ import { signInWithEmail } from "~/core/auth/mutations";
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { ContinueWithEmailForm } from "~/core/components";
 import { AuthFormWrapper } from "~/core/components/layouts/auth-form-wrapper";
-import { assertIsPost } from "~/core/utils/http.server";
+import { assertIsPost } from "~/utils/http.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
@@ -113,7 +113,7 @@ export default function LoginPage() {
           Nie posiadasz jeszcze konta?{" "}
           <Link
             className="text-primary-500 hover:underline focus:text-primary-400"
-            to="/join"
+            to="/register"
           >
             Zarejestruj się
           </Link>

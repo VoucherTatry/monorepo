@@ -11,7 +11,7 @@ import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import { assertIsPost } from "~/core/utils/http.server";
+import { assertIsPost } from "~/utils/http.server";
 import { createCampaign } from "~/modules/campaign/mutations";
 
 export const NewCampaignFormSchema = z.object({

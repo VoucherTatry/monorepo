@@ -1,7 +1,7 @@
 import type { Profile } from "@prisma/client";
 import { z } from "zod";
 
-import type { ZodShape } from "~/core/utils/zod-types";
+import type { ZodShape } from "~/utils/zod-types";
 
 export type ProfileSchemaFields = Omit<Profile, "userId">;
 type ProfileSchemaShape = ZodShape<ProfileSchemaFields>;

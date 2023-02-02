@@ -1,18 +1,8 @@
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
-import { SERVER_URL } from "~/core/utils/env.server";
+import { getSupabaseAdmin } from "~/core/integrations/supabase/supabase";
 
 export async function createAuthAccount(email: string, password: string) {
-  const { data, error } = await supabaseAdmin.auth.signUp({
+  return await getSupabaseAdmin().auth.admin.createUser({
     email,
     password,
-    options: {
-      emailRedirectTo: `${SERVER_URL}/oauth/callback`,
-    },
   });
-
-  if (!data.session || !data.user || error) return null;
-
-  if (data.session) return data.session.user;
-
-  return data.user;
 }

@@ -1,23 +1,27 @@
 import { redirect } from "@remix-run/node";
 
-import { LOGIN_URL } from "../const";
-import type { AuthSession } from "../session.server";
-import { getAuthSession, commitAuthSession } from "../session.server";
-import { mapAuthSession } from "../utils/map-auth-session";
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { LOGIN_URL } from "~/core/auth/const";
+import type { AuthSession } from "~/core/auth/session.server";
+import { getAuthSession, commitAuthSession } from "~/core/auth/session.server";
+import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
+import { getSupabaseAdmin } from "~/core/integrations/supabase/supabase";
+import { getUserById } from "~/modules/user/queries";
 import {
   getCurrentPath,
   isGet,
   makeRedirectToFromHere,
-} from "~/core/utils/http.server";
-import { getUserById } from "~/modules/user/queries";
+} from "~/utils/http.server";
 
-async function refreshAccessToken(session: AuthSession | null) {
-  if (!session) return null;
+export async function refreshAccessToken(
+  refresh_token?: string
+): Promise<AuthSession | null> {
+  if (!refresh_token) return null;
 
-  const { data, error } = await supabaseAdmin.auth.setSession(session);
+  const { data, error } = await getSupabaseAdmin().auth.refreshSession({
+    refresh_token,
+  });
 
-  if (!data || error) return null;
+  if (!data.session || error) return null;
 
   const user = await getUserById(data.user?.id);
 
@@ -29,7 +33,9 @@ export async function refreshAuthSession(
 ): Promise<AuthSession> {
   const authSession = await getAuthSession(request);
 
-  const refreshedAuthSession = await refreshAccessToken(authSession);
+  const refreshedAuthSession = await refreshAccessToken(
+    authSession?.refresh_token
+  );
 
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token

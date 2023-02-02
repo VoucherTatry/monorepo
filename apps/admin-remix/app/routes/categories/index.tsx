@@ -5,7 +5,7 @@ import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import { json, useLoaderData } from "~/utils/superjson-remix";
 import { getCategories } from "~/modules/categories/queries";
 
 type LoaderData = {

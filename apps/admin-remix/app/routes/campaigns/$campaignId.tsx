@@ -7,7 +7,7 @@ import invariant from "tiny-invariant";
 import { Button } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import { json, useLoaderData } from "~/utils/superjson-remix";
 import { DeleteConfirmModal } from "~/modules/campaign/components/delete-confirm-modal";
 import type { UserCampaign } from "~/modules/campaign/queries";
 import { getCampaignById } from "~/modules/campaign/queries";
@@ -94,15 +94,15 @@ export default function Campaign() {
             <TrashIcon className="w-5 h-5" />
           </Button>
         </div>
-        <div className="flex flex-col space-y-6 px-3 py-4 lg:space-y-12 lg:px-6 lg:py-8">
-          <div className="flex flex-col justify-between space-y-6 lg:flex-row lg:space-y-0">
+        <div className="flex flex-col space-y-6 px-3 py-4 md:space-y-12 md:px-6 md:py-8">
+          <div className="flex flex-col justify-between space-y-6 md:flex-row md:space-y-0">
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">{campaign.title}</h2>
               <div className="flex space-x-2">
                 <Categories categories={campaign.categories} />
               </div>
             </div>
-            <div className="flex items-center space-x-3 text-lg">
+            <div className="flex items-center space-x-3 text-md">
               <span>{new Date(campaign.startDate).toISOString()}</span>
               <span>-</span>
               {campaign.endDate && (
@@ -111,7 +111,7 @@ export default function Campaign() {
               {!campaign.endDate && <span>Do odwołania</span>}
             </div>
           </div>
-          <div className="flex w-full flex-col space-y-6 lg:mx-auto lg:w-3/5 lg:space-y-12">
+          <div className="flex w-full flex-col space-y-6 md:mx-auto md:w-3/5 md:space-y-12">
             <div className="relative mx-auto h-60 w-[25rem] max-w-full overflow-hidden rounded-md bg-stone-300">
               <div className="absolute bottom-0 flex h-16 w-full items-center bg-black opacity-60">
                 <span className="ml-auto flex items-end space-x-1 px-4 text-right text-3xl font-bold leading-none text-white">

@@ -1,5 +1,5 @@
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { getSupabaseAdmin } from "~/core/integrations/supabase";
 
 export async function deleteAuthAccount(userId: string) {
-  return supabaseAdmin.auth.admin.deleteUser(userId);
+  return await getSupabaseAdmin().auth.admin.deleteUser(userId);
 }

@@ -4,9 +4,9 @@ import { useNavigate } from "@remix-run/react";
 import { Th, Table, THead, EmptyRow, Td, Tr } from "ui";
 
 // import { PostgrestError } from "@supabase/supabase-js";
+import { useAppData } from "~/core/hooks/use-app-data";
 import type { ICampaigns } from "~/modules/campaign/queries";
 import { getUserDisplayName } from "~/modules/user/helpers";
-import useAppData from "~/core/hooks/use-app-data";
 
 type CategoryPillProps = Omit<
   React.HTMLAttributes<HTMLSpanElement>,

@@ -10,18 +10,11 @@ npx create-remix --template rphlmr/supa-fly-stack
 
 ## What's in the stack
 
-- [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/products/docker-desktop/)
 - Production-ready [Supabase Database](https://supabase.com/)
-- Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
-- [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
   - **NEW** : Magic Link login 🥳
 - Database ORM with [Prisma](https://prisma.io)
-- Forms Schema (client and server sides !) validation with [Remix Params Helper](https://github.com/kiliman/remix-params-helper)
 - Styling with [Tailwind](https://tailwindcss.com/)
-- End-to-end testing with [Cypress](https://cypress.io)
-- Local third party request mocking with [MSW](https://mswjs.io)
-- Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
@@ -29,12 +22,6 @@ npx create-remix --template rphlmr/supa-fly-stack
 Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
 
 ## Development
-
-- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
-
-  > **Note:** Shadow database is local and run by `docker-compose.yml`
 
 - Create a [Supabase Database](https://supabase.com/) (Free tiers gives you 2 databases)
 
@@ -85,7 +72,6 @@ The database seed script creates a new user with some data you can use to get st
 This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma, Supabase and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expire), and creating and deleting notes.
 
 - auth / session [./app/core/auth](./app/core/auth)
-- creating, and deleting notes [./app/modules/note](./app/modules/note)
 
 ## Deployment
 

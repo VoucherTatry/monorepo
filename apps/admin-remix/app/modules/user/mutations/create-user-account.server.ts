@@ -1,19 +1,26 @@
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 
 import {
   createAuthAccount,
   deleteAuthAccount,
   signInWithEmail,
 } from "~/core/auth/mutations";
-import type { AuthSession } from "~/core/auth/session.server";
-import { db } from "~/core/database";
 import { tryCreateUser } from "~/modules/user/mutations";
 
-export async function createUserAccount(
-  email: string,
-  password: string
-): Promise<AuthSession | null> {
-  const authAccount = await createAuthAccount(email, password);
+export async function createUserAccount(email: string, password: string) {
+  const {
+    data: { user: authAccount },
+    error,
+  } = await createAuthAccount(email, password);
+
+  if (error) {
+    throw json(
+      { errors: error },
+      {
+        status: error.status ?? 500,
+      }
+    );
+  }
 
   // ok, no user account created
   if (!authAccount) return null;
@@ -30,10 +37,7 @@ export async function createUserAccount(
     return null;
   }
 
-  let user = await db.user.findUnique({ where: { email } });
-  if (!user) {
-    user = await tryCreateUser(authSession);
-  }
+  const user = await tryCreateUser(authSession);
 
   if (!user) return null;
 

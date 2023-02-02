@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { NODE_ENV } from "~/core/utils/env.server";
+import { NODE_ENV } from "~/utils/env";
 
 let db: PrismaClient;
 

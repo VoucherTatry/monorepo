@@ -3,11 +3,11 @@ import { createContext, useContext, useState } from "react";
 
 import { useFetcher } from "@remix-run/react";
 
-import { getSupabaseClient } from "./supabase.client";
+import { getSupabaseClient } from "./supabase";
 import type { SupabaseClient } from "./types";
 import type { RealtimeAuthSession } from "~/core/auth/session.server";
 import { useInterval, useMatchesData } from "~/core/hooks";
-import { isBrowser } from "~/core/utils/is-browser";
+import { isBrowser } from "~/utils/is-browser";
 
 // Remix feature here, we can "watch" root loader data
 function useOptionalRealtimeSession(): Partial<RealtimeAuthSession> {

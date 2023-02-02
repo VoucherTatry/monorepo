@@ -5,8 +5,8 @@ import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { notFound } from "~/core/utils/http.server";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import { notFound } from "~/utils/http.server";
+import { json, useLoaderData } from "~/utils/superjson-remix";
 import {
   CampaignsTable,
   CampaignsTableBody,

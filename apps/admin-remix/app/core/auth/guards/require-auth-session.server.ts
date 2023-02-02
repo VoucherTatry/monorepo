@@ -1,8 +1,9 @@
-import { refreshAuthSession } from "../mutations/refresh-auth-session.server";
-import { getAuthAccountByAccessToken } from "../queries/get-auth-account.server";
-import type { AuthSession } from "../session.server";
-import { assertAuthSession } from "./assert-auth-session.server";
-import { isGet } from "~/core/utils/http.server";
+import { assertAuthSession } from "~/core/auth/guards/assert-auth-session.server";
+import { getAuthAccountByAccessToken } from "~/core/auth/queries/get-auth-account.server";
+import { refreshAuthSession } from "~/core/auth/refresh-auth-session.server";
+import type { AuthSession } from "~/core/auth/session.server";
+
+const REFRESH_ACCESS_TOKEN_THRESHOLD = 60 * 10; // 10 minutes left before token expires
 
 async function verifyAuthSession(authSession: AuthSession) {
   const authAccount = await getAuthAccountByAccessToken(
@@ -27,28 +28,29 @@ async function verifyAuthSession(authSession: AuthSession) {
  */
 export async function requireAuthSession(
   request: Request,
-  { onFailRedirectTo }: { onFailRedirectTo?: string } = {}
+  {
+    onFailRedirectTo,
+    verify,
+  }: { onFailRedirectTo?: string; verify: boolean } = { verify: false }
 ): Promise<AuthSession> {
   const authSession = await assertAuthSession(request, {
     onFailRedirectTo,
   });
 
   // ok, let's challenge its access token
-  const isValidSession = await verifyAuthSession(authSession);
+  // by default, we don't verify the access token from supabase auth api to save some time
+  const isValidSession = verify ? await verifyAuthSession(authSession) : true;
 
   // damn, access token expires
-  if (!isValidSession) {
-    return refreshAuthSession(request);
-  }
-
-  // so, maybe we are in a POST / PUT / PATCH / DELETE method
-  // user session is valid, but we don't know if it'll expire in a microsecond.
-  // it can be problematic if you use this access token to fetch one of your external api
-  // let's refresh session in case of 🧐
-  if (!isGet(request)) {
+  // let's try to refresh, in case of 🧐
+  if (!isValidSession || isExpiringSoon(authSession.expiresAt)) {
     return refreshAuthSession(request);
   }
 
   // finally, we have a valid session, let's return it
   return authSession;
+}
+
+function isExpiringSoon(expiresAt: number) {
+  return (expiresAt - REFRESH_ACCESS_TOKEN_THRESHOLD) * 1000 < Date.now();
 }

@@ -9,7 +9,7 @@ import { Link } from "@remix-run/react";
 import { LinkButton, Table, Td, Th, THead, Tr } from "ui";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { json, useLoaderData } from "~/core/utils/superjson-remix";
+import { json, useLoaderData } from "~/utils/superjson-remix";
 import { isAdmin } from "~/modules/user/helpers";
 import type { IUser } from "~/modules/user/queries";
 import { getAllUsers } from "~/modules/user/queries/get-users.server";

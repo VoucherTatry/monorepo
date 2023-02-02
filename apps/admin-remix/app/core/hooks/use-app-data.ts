@@ -1,9 +1,8 @@
-import { useMemo } from "react";
 import { useMatchesData } from "~/core/hooks/use-matches-data";
 import { isAdmin } from "~/modules/user/helpers";
-import { RootData } from "~/root";
+import type { RootData } from "~/root";
 
-const useAppData = () => {
+export const useAppData = () => {
   const data = useMatchesData<RootData>("root");
 
   if (!data || !data.user)
@@ -17,5 +16,3 @@ const useAppData = () => {
     isAdmin: isAdmin(data.user!.role),
   };
 };
-
-export default useAppData;

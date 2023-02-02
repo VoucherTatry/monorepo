@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { assertIsDelete } from "~/core/utils/http.server";
+import { assertIsDelete } from "~/utils/http.server";
 import { deleteCampaign } from "~/modules/campaign/mutations";
 
 export const action: ActionFunction = async ({ request }) => {

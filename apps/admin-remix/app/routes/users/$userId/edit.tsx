@@ -10,7 +10,7 @@ import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
 import { useMatchesData } from "~/core/hooks";
 import { ProfileSchema } from "~/core/schemas";
-import { assertIsPost } from "~/core/utils/http.server";
+import { assertIsPost } from "~/utils/http.server";
 import { createProfile } from "~/modules/user/mutations/create-profile.server";
 import type { UserData } from "~/routes/users/$userId";
 

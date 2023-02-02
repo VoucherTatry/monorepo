@@ -2,7 +2,7 @@ import { redirect } from "@remix-run/node";
 
 import { LOGIN_URL } from "../const";
 import { commitAuthSession, getAuthSession } from "../session.server";
-import { makeRedirectToFromHere } from "~/core/utils/http.server";
+import { makeRedirectToFromHere } from "~/utils/http.server";
 
 export async function assertAuthSession(
   request: Request,

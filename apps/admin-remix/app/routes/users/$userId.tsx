@@ -3,7 +3,7 @@ import { Outlet } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { json } from "~/core/utils/superjson-remix";
+import { json } from "~/utils/superjson-remix";
 import type { IUser } from "~/modules/user/queries";
 import { getUserById } from "~/modules/user/queries";
 

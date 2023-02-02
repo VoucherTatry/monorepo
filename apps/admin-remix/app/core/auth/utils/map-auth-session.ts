@@ -1,4 +1,4 @@
-import type { AuthSession } from "../session.server";
+import type { AuthSession } from "~/core/auth/session.server";
 import type { SupabaseAuthSession } from "~/core/integrations/supabase/types";
 import type { IUser } from "~/modules/user/queries";
 

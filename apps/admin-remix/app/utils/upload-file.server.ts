@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "../integrations/supabase/supabase.server";
+import { getSupabaseAdmin } from "~/core/integrations/supabase/supabase";
 
 async function convertToFile(
   data: AsyncIterable<Uint8Array>,
@@ -16,8 +16,8 @@ async function convertToFile(
 }
 
 export function getPublicFileURL(filePath: string, bucketName: string) {
-  const { data: url } = supabaseAdmin.storage
-    .from(bucketName)
+  const { data: url } = getSupabaseAdmin()
+    .storage.from(bucketName)
     .getPublicUrl(filePath);
 
   return url?.publicUrl;
@@ -38,8 +38,8 @@ export async function uploadFile(
 
   if (!file) return null;
 
-  const { data: result, error } = await supabaseAdmin.storage
-    .from(bucketName)
+  const { data: result, error } = await getSupabaseAdmin()
+    .storage.from(bucketName)
     .upload(filePath, file);
 
   if (!result || error) return null;

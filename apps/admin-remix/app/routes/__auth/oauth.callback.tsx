@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { json, redirect } from "@remix-run/node";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
-import { getFormData } from "remix-params-helper";
+import { parseFormAny } from "react-zorm";
+import { Spinner } from "ui";
 import { z } from "zod";
 
+import { refreshAccessToken } from "~/core/auth/refresh-auth-session.server";
 import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
-import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client";
-import { assertIsPost, safeRedirect } from "~/core/utils/http.server";
+import { getSupabaseClient } from "~/core/integrations/supabase/supabase";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserById } from "~/modules/user/queries";
-import { Spinner } from "ui";
+import { assertIsPost, safeRedirect } from "~/utils/http.server";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
@@ -31,61 +31,67 @@ interface ActionData {
 export const action: ActionFunction = async ({ request }) => {
   assertIsPost(request);
 
-  const schema = z.object({
-    access_token: z.string(),
-    refresh_token: z.string(),
-    userId: z.string(),
-    email: z.string().email(),
-    redirectTo: z.string().optional(),
-    expiresIn: z.number(),
-    expiresAt: z.number(),
-  });
+  const formData = await request.formData();
+  const result = await z
+    .object({
+      refreshToken: z.string(),
+      redirectTo: z.string().optional(),
+    })
+    .safeParseAsync(parseFormAny(formData));
 
-  const form = await getFormData(request, schema);
-
-  if (!form.success) {
+  if (!result.success) {
     return json<ActionData>(
       {
-        message: "invalid-token",
+        message: "invalid-request",
       },
       { status: 400 }
     );
   }
 
-  const { redirectTo, ...authSession } = form.data;
+  const { redirectTo, refreshToken } = result.data;
   const safeRedirectTo = safeRedirect(redirectTo, "/");
 
+  // We should not trust what is sent from the client
+  // https://github.com/rphlmr/supa-fly-stack/issues/45
+  const authSession = await refreshAccessToken(refreshToken);
+  if (!authSession) {
+    return json(
+      {
+        message: "invalid-refresh-token",
+      },
+      { status: 401 }
+    );
+  }
+
+  // user have an account, skip creation part and just commit session
   const user = await getUserById(authSession.userId);
-
-  // first time sign in, let's create a brand-new User row in supabase
-  if (!user) {
-    const newUser = await tryCreateUser({
-      email: authSession.email,
-      userId: authSession.userId,
-    });
-
-    if (!newUser) {
-      return json<ActionData>(
-        {
-          message: "create-user-error",
-        },
-        { status: 500 }
-      );
-    }
-
+  if (user) {
     return redirect(safeRedirectTo, {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
           authSession: {
             ...authSession,
-            user: {
-              ...newUser,
-              profile: null,
-            },
+            userId: user.id,
+            user,
           },
         }),
       },
     });
+  }
+
+  // first time sign in, let's create a brand-new User row in supabase
+  const newUser = await tryCreateUser({
+    email: authSession.email,
+    userId: authSession.userId,
+  });
+
+  if (!newUser) {
+    return json<ActionData>(
+      {
+        message: "create-user-error",
+      },
+      { status: 500 }
+    );
   }
 
   return redirect(safeRedirectTo, {
@@ -93,7 +99,10 @@ export const action: ActionFunction = async ({ request }) => {
       "Set-Cookie": await commitAuthSession(request, {
         authSession: {
           ...authSession,
-          user,
+          user: {
+            ...newUser,
+            profile: null,
+          },
         },
       }),
     },
@@ -101,44 +110,42 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function LoginCallback() {
-  const error = useActionData() as ActionData;
+  const error = useActionData<typeof action>();
   const fetcher = useFetcher();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const supabase = useMemo(() => getSupabaseClient(), []);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, supabaseSession) => {
+      if (event === "SIGNED_IN") {
+        // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
+        // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
+        // supabase auth listener gives us a user session, based on what it founds in this fragment url
+        // we can't use it directly, client-side, because we can't access sessionStorage from here
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, supabaseSession) => {
-        if (event === "SIGNED_IN") {
-          // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
-          // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
-          // supabase auth listener gives us a user session, based on what it founds in this fragment url
-          // we can't use it directly, client-side, because we can't access sessionStorage from here
-          // so, we map what we need, and let's back-end to the work
-          const authSession = mapAuthSession(supabaseSession, null);
+        // we should not trust what's happen client side
+        // so, we only pick the refresh token, and let's back-end getting user session from it
+        const refreshToken = supabaseSession?.refresh_token;
 
-          if (!authSession) return;
+        if (!refreshToken) return;
 
-          const formData = new FormData();
+        const formData = new FormData();
 
-          for (const [key, value] of Object.entries(authSession)) {
-            formData.append(key, value as string);
-          }
+        formData.append("refreshToken", refreshToken);
+        formData.append("redirectTo", redirectTo);
 
-          formData.append("redirectTo", redirectTo);
-
-          fetcher.submit(formData, { method: "post", replace: true });
-        }
+        fetcher.submit(formData, { method: "post", replace: true });
       }
-    );
+    });
 
     return () => {
       // prevent memory leak. Listener stays alive 👨‍🎤
-      authListener?.subscription?.unsubscribe();
+      subscription.unsubscribe();
     };
-  }, [fetcher, redirectTo]);
+  }, [fetcher, redirectTo, supabase.auth]);
 
   return error ? <div>{error.message}</div> : <Spinner size="lg" />;
 }

@@ -1,10 +1,10 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { getFormData } from "remix-params-helper";
+import { parseFormAny } from "react-zorm";
 import { z } from "zod";
 
 import { sendMagicLink } from "~/core/auth/mutations";
-import { assertIsPost } from "~/core/utils/http.server";
+import { assertIsPost } from "~/utils/http.server";
 
 export enum MagicLinkSubmitErrorsEnum {
   TOO_MANY = "too-many-requests",
@@ -16,6 +16,10 @@ const MagicLinkSchema = z.object({
     .string()
     .email("Nieprawidłowy adres email")
     .transform((email) => email.toLowerCase()),
+  shouldCreateUser: z.preprocess(
+    (val) => Boolean(parseInt(z.string().parse(val), 10)),
+    z.boolean()
+  ),
 });
 
 interface ActionData {
@@ -25,18 +29,22 @@ interface ActionData {
 export const action: ActionFunction = async ({ request }) => {
   assertIsPost(request);
 
-  const form = await getFormData(request, MagicLinkSchema);
+  const formData = await request.formData();
+  const result = await MagicLinkSchema.safeParseAsync(parseFormAny(formData));
 
-  if (!form.success) {
+  if (!result.success) {
     return json<ActionData>(
       {
-        error: "Nieprawidłowy adres email",
+        error: result.error.errors[0].message,
       },
       { status: 400 }
     );
   }
 
-  const { error } = await sendMagicLink(form.data.email);
+  const { error } = await sendMagicLink(
+    result.data.email,
+    result.data.shouldCreateUser
+  );
 
   if (error) {
     console.error(error);
@@ -52,9 +60,9 @@ export const action: ActionFunction = async ({ request }) => {
 
     return json<ActionData>(
       {
-        error: MagicLinkSubmitErrorsEnum.GENERIC,
+        error: error.message,
       },
-      { status: 500 }
+      { status: error.status }
     );
   }
 

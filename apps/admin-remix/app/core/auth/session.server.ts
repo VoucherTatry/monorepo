@@ -1,9 +1,13 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
-import { NODE_ENV, SESSION_SECRET } from "../utils/env.server";
-import { safeRedirect } from "../utils/http.server";
-import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
+import {
+  SESSION_ERROR_KEY,
+  SESSION_KEY,
+  SESSION_MAX_AGE,
+} from "~/core/auth/const";
 import type { IUser } from "~/modules/user/queries";
+import { NODE_ENV, SESSION_SECRET } from "~/utils/env";
+import { safeRedirect } from "~/utils/http.server";
 
 if (!SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
@@ -12,10 +16,10 @@ if (!SESSION_SECRET) {
 export interface AuthSession {
   access_token: string;
   refresh_token: string;
-  userId: string;
-  email: string;
   expiresIn: number;
   expiresAt: number;
+  userId: string;
+  email: string;
   user: IUser | null;
 }
 
@@ -30,7 +34,7 @@ export type RealtimeAuthSession = Pick<
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "__session",
+    name: "__authSession",
     httpOnly: true,
     maxAge: 0,
     path: "/",

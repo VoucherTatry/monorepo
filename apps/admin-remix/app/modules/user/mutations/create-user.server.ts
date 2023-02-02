@@ -1,16 +1,20 @@
 import { deleteAuthAccount } from "~/core/auth/mutations";
 import type { AuthSession } from "~/core/auth/session.server";
 import { db } from "~/core/database";
+import type { IUser } from "~/modules/user/queries";
 
 async function createUser({
   email,
   userId,
-}: Pick<AuthSession, "userId" | "email">) {
+}: Pick<AuthSession, "userId" | "email">): Promise<IUser | null> {
   return db.user
     .create({
       data: {
         email,
         id: userId,
+      },
+      include: {
+        profile: true,
       },
     })
     .then((user) => user)
