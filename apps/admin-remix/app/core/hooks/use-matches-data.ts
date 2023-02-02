@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { useMatches } from "@remix-run/react";
+import { parse } from "superjson";
 
 /**
  * This base hook is used in other hooks to quickly search for specific data
@@ -17,7 +18,9 @@ export function useMatchesData<T>(id: string): T | undefined {
   );
 
   if (route) {
-    return route?.data as T;
+    const parsed = parse<T>(route?.data as any) as T;
+
+    return parsed;
   }
 
   return undefined;

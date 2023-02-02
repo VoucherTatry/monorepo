@@ -4,15 +4,15 @@ import type { Location } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
 import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
-import { Form, useActionData, useTransition } from "@remix-run/react";
-import { getFormData, useFormInputProps } from "remix-params-helper";
+import { Form, useTransition } from "@remix-run/react";
+import { parseFormAny, useZorm } from "react-zorm";
 import { Input } from "ui";
 import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import { assertIsPost } from "~/utils/http.server";
 import { createCampaign } from "~/modules/campaign/mutations";
+import { assertIsPost } from "~/utils/http.server";
 
 export const NewCampaignFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -45,12 +45,15 @@ export const action: ActionFunction = async ({ request }) => {
   assertIsPost(request);
 
   const authSession = await requireAuthSession(request);
-  const formValidation = await getFormData(request, NewCampaignFormSchema);
+  const formData = await request.formData();
+  const formValidation = await NewCampaignFormSchema.safeParseAsync(
+    parseFormAny(formData)
+  );
 
   if (!formValidation.success) {
     return json<ActionData>(
       {
-        errors: formValidation.errors,
+        errors: {},
       },
       {
         status: 400,
@@ -108,38 +111,16 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewCampaignPage() {
-  const actionData = useActionData() as ActionData;
+  const zo = useZorm("CreateCampaignForm", NewCampaignFormSchema);
 
-  const titleRef = React.useRef<HTMLInputElement>(null);
-  const bodyRef = React.useRef<HTMLTextAreaElement>(null);
-  // const priceRef = React.useRef<HTMLInputElement>(null);
-  // const discountRef = React.useRef<HTMLInputElement>(null);
-  // const startDateRef = React.useRef<HTMLInputElement>(null);
-  // const endDateRef = React.useRef<HTMLInputElement>(null);
-  // const latRef = React.useRef<HTMLInputElement>(null);
-  // const lngRef = React.useRef<HTMLInputElement>(null);
-  // const zoomRef = React.useRef<HTMLInputElement>(null);
-
-  const inputProps = useFormInputProps(NewCampaignFormSchema);
   const transition = useTransition();
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
-  React.useEffect(() => {
-    switch (actionData?.errors) {
-      case "title":
-        return titleRef.current?.focus();
-    }
-    // if (actionData?.errors?.title) {
-    //   titleRef.current?.focus();
-    // } else if (actionData?.errors?.body) {
-    //   bodyRef.current?.focus();
-    // }
-  }, [actionData]);
-
   return (
     <Form
       method="post"
+      ref={zo.ref}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -149,15 +130,10 @@ export default function NewCampaignPage() {
     >
       <div className="flex space-x-2">
         <Input
-          id="title"
           label="Tytuł"
-          error={actionData?.errors?.title}
-          {...inputProps("title")}
-          ref={titleRef}
-          aria-invalid={actionData?.errors?.title ? true : undefined}
-          aria-errormessage={
-            actionData?.errors?.title ? "title-error" : undefined
-          }
+          id={zo.fields.title()}
+          name={zo.fields.title()}
+          error={zo.errors.title()?.message}
           disabled={disabled}
         />
       </div>
@@ -166,69 +142,57 @@ export default function NewCampaignPage() {
         <label className="flex w-full flex-col gap-1">
           <span>Opis: </span>
           <textarea
-            {...inputProps("body")}
-            ref={bodyRef}
+            id={zo.fields.body()}
+            name={zo.fields.body()}
             rows={8}
-            aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
-            }
+            aria-invalid={zo.errors.body() ? true : undefined}
+            aria-errormessage={zo.errors.body()?.message}
             disabled={disabled}
           />
         </label>
-        {actionData?.errors?.body && (
+        {zo.errors.title()?.message && (
           <div
             className="pt-1 text-red-700"
             id="body-error"
           >
-            {actionData?.errors.body}
+            {zo.errors.title()?.message}
           </div>
         )}
       </div>
 
       <Input
-        id="price"
-        inputMode="decimal"
         label="Cena"
-        {...inputProps("price")}
+        inputMode="decimal"
         required={false}
-        ref={titleRef}
+        id={zo.fields.price()}
+        name={zo.fields.price()}
+        error={zo.errors.price()?.message}
         disabled={disabled}
       />
 
       <Input
         label="Zniżka"
-        id="discount"
-        error={actionData?.errors?.discount}
-        {...inputProps("discount")}
-        ref={titleRef}
-        aria-invalid={actionData?.errors?.discount ? true : undefined}
-        aria-errormessage={
-          actionData?.errors?.discount ? "discount-error" : undefined
-        }
+        id={zo.fields.discount()}
+        name={zo.fields.discount()}
+        error={zo.errors.discount()?.message}
         disabled={disabled}
       />
 
       <Input
         label="Data początkowa"
-        id="startDate"
-        error={actionData?.errors?.startDate}
-        {...inputProps("startDate")}
-        ref={titleRef}
-        aria-invalid={actionData?.errors?.startDate ? true : undefined}
-        aria-errormessage={
-          actionData?.errors?.startDate ? "discount-error" : undefined
-        }
-        disabled={disabled}
         defaultValue={new Date().toISOString().split("T")[0]}
+        id={zo.fields.startDate()}
+        name={zo.fields.startDate()}
+        error={zo.errors.startDate()?.message}
+        disabled={disabled}
       />
 
       <Input
         label="Data końcowa"
-        id="endDate"
-        {...inputProps("endDate")}
         required={false}
-        ref={titleRef}
+        id={zo.fields.endDate()}
+        name={zo.fields.endDate()}
+        error={zo.errors.endDate()?.message}
         disabled={disabled}
       />
 

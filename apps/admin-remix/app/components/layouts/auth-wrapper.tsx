@@ -1,4 +1,4 @@
-import { Logo } from "~/core/components";
+import { Logo } from "~/components";
 
 export function AuthWrapper({ children }: { children: React.ReactNode }) {
   return (

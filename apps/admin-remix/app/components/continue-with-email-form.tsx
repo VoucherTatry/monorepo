@@ -3,19 +3,6 @@ import React from "react";
 import { useFetcher } from "@remix-run/react";
 import { Button, Input } from "ui";
 
-import { MagicLinkSubmitErrorsEnum } from "~/routes/__auth/send-magic-link";
-
-const getErrorMessage = (err?: string): string | null => {
-  if (!err) return null;
-
-  switch (err) {
-    case (err = MagicLinkSubmitErrorsEnum.TOO_MANY):
-      return "Mail został przed chwilą wysłany. Proszę spróbować później.";
-    default:
-      return err;
-  }
-};
-
 export const ContinueWithEmailForm = () => {
   const ref = React.useRef<HTMLFormElement>(null);
   const sendMagicLink = useFetcher();
@@ -53,7 +40,7 @@ export const ContinueWithEmailForm = () => {
           isSuccessfull ? "text-green-600" : ""
         }`}
       >
-        {!isSuccessfull ? getErrorMessage(data?.error) : "Sprawdź email! ✌️"}
+        {!isSuccessfull ? data?.error : "Sprawdź email! ✌️"}
       </div>
       <Button
         type="submit"

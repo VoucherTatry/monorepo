@@ -2,7 +2,7 @@ import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
 import {
   SESSION_ERROR_KEY,
-  SESSION_KEY,
+  SESSION_KEY_AUTH,
   SESSION_MAX_AGE,
 } from "~/core/auth/const";
 import type { IUser } from "~/modules/user/queries";
@@ -34,7 +34,7 @@ export type RealtimeAuthSession = Pick<
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "__authSession",
+    name: "__session",
     httpOnly: true,
     maxAge: 0,
     path: "/",
@@ -43,6 +43,8 @@ const sessionStorage = createCookieSessionStorage({
     secure: NODE_ENV === "production",
   },
 });
+
+export const { getSession: rawGetSession, commitSession } = sessionStorage;
 
 export async function createAuthSession({
   request,
@@ -72,7 +74,7 @@ export async function getAuthSession(
   request: Request
 ): Promise<AuthSession | null> {
   const session = await getSession(request);
-  return session.get(SESSION_KEY);
+  return session.get(SESSION_KEY_AUTH);
 }
 
 export async function commitAuthSession(
@@ -90,7 +92,7 @@ export async function commitAuthSession(
   // allow user session to be null.
   // useful you want to clear session and display a message explaining why
   if (authSession !== undefined) {
-    session.set(SESSION_KEY, authSession);
+    session.set(SESSION_KEY_AUTH, authSession);
   }
 
   session.flash(SESSION_ERROR_KEY, flashErrorMessage);

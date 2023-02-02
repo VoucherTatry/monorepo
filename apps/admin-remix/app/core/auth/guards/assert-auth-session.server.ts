@@ -12,17 +12,21 @@ export async function assertAuthSession(
 
   // If there is no user session, Fly, You Fools! 🧙‍♂️
   if (!authSession?.access_token || !authSession?.refresh_token) {
-    throw redirect(
-      `${onFailRedirectTo || LOGIN_URL}?${makeRedirectToFromHere(request)}`,
-      {
-        headers: {
-          "Set-Cookie": await commitAuthSession(request, {
-            authSession: null,
-            flashErrorMessage: "no-user-session",
-          }),
-        },
-      }
-    );
+    let redirectUrl = onFailRedirectTo ?? LOGIN_URL;
+
+    const prevPath = makeRedirectToFromHere(request);
+    if (prevPath) {
+      redirectUrl = `${redirectUrl}?${prevPath}`;
+    }
+
+    throw redirect(redirectUrl, {
+      headers: {
+        "Set-Cookie": await commitAuthSession(request, {
+          authSession: null,
+          flashErrorMessage: "no-user-session",
+        }),
+      },
+    });
   }
 
   return authSession;

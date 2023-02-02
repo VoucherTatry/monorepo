@@ -5,10 +5,12 @@ import type { RootData } from "~/root";
 export const useAppData = () => {
   const data = useMatchesData<RootData>("root");
 
-  if (!data || !data.user)
+  if (!data || !data.user) {
+    console.error({ data });
     throw new Error(
       "Błąd w przetwarzaniu danych aplikacji, skontatkuj się z administratorem!"
     );
+  }
 
   return {
     user: data.user,

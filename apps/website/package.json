@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint-fix": "next lint --fix",
-    "check-types": "tsc --noEmit --pretty",
-    "check-graphql": "graphql-codegen --config codegen.yml"
+    "//dev": "next dev",
+    "//build": "next build",
+    "//start": "next start",
+    "//lint": "next lint",
+    "//lint-fix": "next lint --fix",
+    "//check-types": "tsc --noEmit --pretty",
+    "//check-graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",

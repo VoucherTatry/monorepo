@@ -40,7 +40,12 @@ export async function refreshAuthSession(
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token
   if (!refreshedAuthSession) {
-    const redirectUrl = `${LOGIN_URL}?${makeRedirectToFromHere(request)}`;
+    let redirectUrl = `${LOGIN_URL}`;
+
+    const prevPath = makeRedirectToFromHere(request);
+    if (prevPath) {
+      redirectUrl = `${redirectUrl}?${prevPath}`;
+    }
 
     // here we throw instead of return because this function promise a AuthSession and not a response object
     // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions

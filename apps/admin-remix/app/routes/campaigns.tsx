@@ -2,8 +2,8 @@ import { redirect } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
+import { WithSidebar } from "~/components/layouts/with-sidebar";
 import { requireAuthSession } from "~/core/auth/guards";
-import { WithSidebar } from "~/core/components/layouts/with-sidebar";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { user } = await requireAuthSession(request);

@@ -3,37 +3,29 @@ import { Button, Input } from 'ui';
 
 import { AuthLayout } from '~/components/auth-layout';
 
-const Login = () => (
+const Auth = () => (
   <AuthLayout>
     <div className="flex w-full max-w-md flex-col space-y-8 md:justify-center">
       <div className="flex flex-col space-y-4">
-        <h1 className="text-4xl font-bold">Zaloguj się</h1>
+        <h1 className="text-4xl font-bold">Witaj na platformie VoucherTatry</h1>
 
         <p className="text-stone-500 space-x-2">
-          <span>Nie posiadasz jeszcze konta?</span>
-          <Link
-            className="text-primary-500 hover:underline focus:text-primary-400"
-            href="/auth/register"
-          >
-            Zarejestruj się
-          </Link>
+          Podaj swój adres email aby założyć konto lub się zalogować. W obu
+          wypadkach na Twój adres email zostanie wysłane jednorazowe hasło
+          potrzebne w celu dalszej weryfikacji.
         </p>
       </div>
 
       <form method="post" className="space-y-6">
         <div className="flex flex-col space-y-2">
           <Input
-            label="Adres email"
-            // {...inputProps('email')}
-            // ref={emailRef}
-            id="email"
             type="email"
             required
             autoComplete="email"
-            // aria-invalid={actionData?.errors?.email ? true : undefined}
-            aria-describedby="email-error"
+            name="email"
+            id="magic-link"
             // disabled={disabled}
-            // error={actionData?.errors?.email}
+            inputOnly
           />
 
           {/* <Input
@@ -57,14 +49,15 @@ const Login = () => (
         />
         <Button
           width="w-full"
+          size="md"
           type="submit"
           // disabled={disabled}
         >
-          Zaloguj się
+          Wyślij jednorazowe hasło
         </Button>
       </form>
     </div>
   </AuthLayout>
 );
 
-export default Login;
+export default Auth;

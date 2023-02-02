@@ -1,48 +1,52 @@
-import { redirect } from "@remix-run/node";
 import { AuthError } from "@supabase/supabase-js";
-import type { VerifyEmailOtpParams, Session } from "@supabase/supabase-js";
+import type {
+  VerifyEmailOtpParams,
+  Session,
+  AuthResponse,
+} from "@supabase/supabase-js";
 
 import { deleteAuthAccount } from "~/core/auth/mutations/delete-auth-account.server";
 import { getSupabaseAdmin } from "~/core/integrations/supabase";
 import { tryCreateUser } from "~/modules/user/mutations";
 import type { IUser } from "~/modules/user/queries";
 import { getUserById } from "~/modules/user/queries";
-// import { SERVER_URL } from "~/utils/env";
 
 const nullData = { user: null, session: null };
 
-type AuthResponseWithUserAccount =
-  | {
-      data: {
-        user: IUser | null;
-        session: Session | null;
-      };
-      error: null;
-    }
-  | {
-      data: {
-        user: null;
-        session: null;
-      };
-      error: AuthError;
-    };
+type AuthSuccessResponse = {
+  data: {
+    user: IUser;
+    session: Session;
+  };
+  error: null;
+};
 
-export async function sendMagicLink(
-  email: string,
-  shouldCreateUser = true
-): Promise<AuthResponseWithUserAccount> {
-  const response = await getSupabaseAdmin().auth.signInWithOtp({
+type AuthErrorResponse = {
+  data: {
+    user: null;
+    session: null;
+  };
+  error: AuthError;
+};
+
+type AuthResponseWithUserAccount = AuthSuccessResponse | AuthErrorResponse;
+
+export async function sendMagicLink(email: string): Promise<AuthResponse> {
+  return await getSupabaseAdmin().auth.signInWithOtp({
     email,
-    options: {
-      shouldCreateUser,
-
-      // emailRedirectTo: `${SERVER_URL}/oauth/callback`,
-    },
   });
+}
 
-  const { data, error } = response;
-
-  console.log(response);
+export async function confirmEmailOtp({
+  email,
+  token,
+  type,
+}: VerifyEmailOtpParams): Promise<AuthResponseWithUserAccount> {
+  const { data, error } = await getSupabaseAdmin().auth.verifyOtp({
+    email,
+    token,
+    type,
+  });
 
   if (error) {
     return { error, data };
@@ -52,6 +56,13 @@ export async function sendMagicLink(
     return {
       data: nullData,
       error: new AuthError("Could not get nor create user!", 500),
+    };
+  }
+
+  if (!data.session) {
+    return {
+      data: nullData,
+      error: new AuthError("Could not get session!", 500),
     };
   }
 
@@ -72,21 +83,8 @@ export async function sendMagicLink(
     };
   }
 
-  if (!data.user.confirmed_at) {
-    throw redirect("/confirm-email");
-  }
-
-  return { data: { user: userAccount, session: null }, error: null };
-}
-
-export async function confirmEmailOtp({
-  email,
-  token,
-  type,
-}: VerifyEmailOtpParams) {
-  return await getSupabaseAdmin().auth.verifyOtp({
-    email,
-    token,
-    type,
-  });
+  return {
+    data: { session: data.session, user: userAccount },
+    error,
+  };
 }

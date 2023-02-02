@@ -14,8 +14,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import { Progress } from "~/components/Progress";
 import { getAuthSession } from "~/core/auth/session.server";
-import { Progress } from "~/core/components/Progress";
 import { getUserById } from "~/modules/user/queries";
 import type { IUser } from "~/modules/user/queries";
 import tailwindCSS from "~/tailwind.css";
@@ -70,7 +70,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let user: IUser | null = null;
   if (authSession) {
-    user = await getUserById(authSession?.userId);
+    user = authSession.user;
   }
 
   return json<RootData>({

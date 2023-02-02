@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
-  error?: string | null;
+  error?: string;
   id: string;
   helperText?: string;
   inputOnly?: boolean;
@@ -45,6 +45,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             aria-describedby={ERROR_MESSAGE}
             aria-invalid={!!error}
+            aria-errormessage={error ?? undefined}
             ref={ref}
             className={clsx(
               'block w-full rounded-md pr-9 text-sm transition disabled:cursor-not-allowed disabled:bg-stone-300 disabled:opacity-75',

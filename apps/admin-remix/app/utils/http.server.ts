@@ -3,6 +3,11 @@ export function getCurrentPath(request: Request) {
 }
 
 export function makeRedirectToFromHere(request: Request) {
+  const currentPath = getCurrentPath(request);
+  if (currentPath === "/") {
+    return null;
+  }
+
   return new URLSearchParams([["redirectTo", getCurrentPath(request)]]);
 }
 
@@ -29,6 +34,23 @@ export function notFound(message: string) {
 
 function notAllowedMethod(message: string) {
   return new Response(message, { status: 405 });
+}
+
+function badRequest(message: string) {
+  return new Response(message, { status: 400 });
+}
+
+export function getRequiredParam(
+  params: Record<string, string | undefined>,
+  key: string
+) {
+  const value = params[key];
+
+  if (!value) {
+    throw badRequest(`Missing required request param "${key}"`);
+  }
+
+  return value;
 }
 
 export function assertIsPost(request: Request, message = "Method not allowed") {

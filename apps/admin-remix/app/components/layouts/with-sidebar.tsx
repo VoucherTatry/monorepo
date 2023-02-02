@@ -13,9 +13,9 @@ import { Link, useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { HamburgerMenuButton } from "ui";
 
-import { Breadcrumbs } from "~/core/components/breadcrumbs";
-import { LogoHorizontal } from "~/core/components/logo";
-import { LogoutButton } from "~/core/components/logout-button";
+import { Breadcrumbs } from "~/components/breadcrumbs";
+import { LogoHorizontal } from "~/components/logo";
+import { LogoutButton } from "~/components/logout-button";
 import { useAppData } from "~/core/hooks/use-app-data";
 
 function SidebarMenuItem({
