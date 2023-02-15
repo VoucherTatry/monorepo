@@ -4,15 +4,12 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { LinkButton, Table, Td, Th, THead, Tr } from "ui";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { json, useLoaderData } from "~/utils/superjson-remix";
-import { isAdmin } from "~/modules/user/helpers";
 import type { IUser } from "~/modules/user/queries";
 import { getAllUsers } from "~/modules/user/queries/get-users.server";
+import { json, useLoaderData } from "~/utils/superjson-remix";
 
 type LoaderData = {
   users: IUser[];
@@ -35,8 +32,7 @@ export default function ProfileIndexPage() {
         <THead>
           <Th width="w-16">Status</Th>
           <Th>E-mail</Th>
-          <Th>Imię</Th>
-          <Th>Nazwisko</Th>
+          <Th>Nazwa firmy</Th>
           <Th />
         </THead>
         <tbody>
@@ -57,8 +53,7 @@ export default function ProfileIndexPage() {
                   {user.email}
                 </Link>
               </Td>
-              <Td>{user.profile?.firstName ?? "-"}</Td>
-              <Td>{user.profile?.lastName ?? "-"}</Td>
+              <Td>{user.profile?.organization ?? "-"}</Td>
               <Td className="text-right">
                 <LinkButton
                   as={Link}

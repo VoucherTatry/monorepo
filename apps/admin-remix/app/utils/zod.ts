@@ -1,4 +1,8 @@
-import type { ZodCustomIssue, ZodIssue } from "zod";
+import type { ZodCustomIssue, ZodIssue, ZodTypeAny } from "zod";
+
+export type ZodShape<T> = {
+  [k in keyof T]: ZodTypeAny;
+};
 
 type ZodCustomIssueWithMessage = ZodCustomIssue & { message: string };
 

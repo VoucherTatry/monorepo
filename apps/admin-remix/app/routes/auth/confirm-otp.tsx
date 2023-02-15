@@ -6,20 +6,14 @@ import { Button, Input } from "ui";
 import { z } from "zod";
 
 import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
-import { SESSION_KEY_OTP_EMAIL } from "~/core/auth/const";
-import { confirmEmailOtp } from "~/core/auth/mutations";
+import { otpSignIn } from "~/core/auth/mutations/otp-sign-in";
 import {
   createAuthSession,
   getAuthSession,
-  getSession,
+  hasValidSessionOTPEmail,
 } from "~/core/auth/session.server";
-import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
+import { getGaurdedPath } from "~/utils/getGuardedPath";
 import { assertIsPost } from "~/utils/http.server";
-
-const EmailSchema = z
-  .string()
-  .email("Nieprawidłowy adres email")
-  .transform((email) => email.toLowerCase());
 
 const ConfirmOTPSchema = z.object({
   token: z
@@ -29,15 +23,6 @@ const ConfirmOTPSchema = z.object({
     .max(6, "token-too-long"),
   redirectTo: z.string().optional(),
 });
-
-async function hasValidSessionOTPEmail(request: Request) {
-  const session = await getSession(request);
-  const validateSessionOTPEmail = await EmailSchema.safeParseAsync(
-    session.get(SESSION_KEY_OTP_EMAIL)
-  );
-
-  return validateSessionOTPEmail.success;
-}
 
 type ActionSuccess = {
   error: null;
@@ -69,47 +54,28 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  const session = await getSession(request);
-  const email = session.get(SESSION_KEY_OTP_EMAIL) as string;
-  session.unset(SESSION_KEY_OTP_EMAIL);
-
-  const { data: authData, error: authError } = await confirmEmailOtp({
-    email,
-    token: result.data.token,
-    type: "magiclink",
-  });
-
-  if (authError) {
-    return json<ActionData>(
-      {
-        error: authError.message,
-        data: null,
-      },
-      { status: 400 }
-    );
-  }
-
-  const authSession = mapAuthSession(authData.session, authData.user);
+  const authSession = await otpSignIn({ token: result.data.token, request });
 
   return createAuthSession({
     request,
-    authSession: authSession!,
-    redirectTo: result.data.redirectTo ?? "/",
+    authSession: authSession,
+    redirectTo: getGaurdedPath({
+      path: result.data.redirectTo ?? "/",
+      user: authSession.user,
+    }),
   });
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
-
   if (authSession) return redirect("/");
 
   const hasSessionOTPEmail = hasValidSessionOTPEmail(request);
-
   if (!hasSessionOTPEmail) {
     throw redirect("..");
   }
 
-  return json(null);
+  return null;
 };
 
 export const meta: MetaFunction = () => ({

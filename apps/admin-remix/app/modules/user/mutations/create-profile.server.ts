@@ -3,16 +3,16 @@ import type { Prisma } from "@prisma/client";
 import { db } from "~/core/database";
 
 export async function createProfile({
-  firstName,
-  lastName,
-  companyName,
+  organization,
+  taxId,
+  phone,
   userId,
   location,
 }: Prisma.ProfileCreateArgs["data"]) {
   const data: Prisma.ProfileCreateArgs["data"] = {
-    firstName,
-    lastName,
-    companyName,
+    organization,
+    taxId,
+    phone,
     location,
     user: {
       connect: {

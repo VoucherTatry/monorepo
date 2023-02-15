@@ -1,9 +1,9 @@
+import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 
-import { WithSidebar } from "~/components/layouts/with-sidebar";
+import { AuthWrapper } from "~/components/layouts/auth-wrapper";
 import { requireAuthSession } from "~/core/auth/guards";
-import { useAppData } from "~/core/hooks/use-app-data";
 import { getGaurdedPath } from "~/utils/getGuardedPath";
 import { getCurrentPath } from "~/utils/http.server";
 
@@ -12,6 +12,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const currentPath = getCurrentPath(request);
   const pathToRedirect = getGaurdedPath({ path: currentPath, user });
+
   if (pathToRedirect !== currentPath) {
     return redirect(pathToRedirect);
   }
@@ -19,16 +20,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-export const meta: MetaFunction = () => ({
-  title: "Strona główna",
-});
-
-export default function Index() {
-  const { user } = useAppData();
-
+export default function CreateProfile() {
   return (
-    <WithSidebar>
-      Hello {user?.profile?.organization ?? user?.email}
-    </WithSidebar>
+    <AuthWrapper>
+      <Outlet />
+    </AuthWrapper>
   );
 }

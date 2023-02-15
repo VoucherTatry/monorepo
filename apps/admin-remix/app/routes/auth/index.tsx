@@ -87,16 +87,6 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  // return json<ActionResponse>(
-  //   {
-  //     error: null,
-  //     data: {
-  //       email: result.data.email,
-  //     },
-  //   },
-  //   { status: 200 }
-  // );
-
   const session = await getSession(request);
   session.set(SESSION_KEY_OTP_EMAIL, result.data.email);
 
@@ -120,12 +110,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function SendOTP() {
-  // const actionData = useActionData<typeof action>();
   const zo = useZorm("SendOTPForm", SendOTPFormSchema);
-  // const [searchParams] = useSearchParams();
-  // const redirectTo = searchParams.get("redirectTo") ?? undefined;
   const transition = useTransition();
-  // const otpRequestSuccess = !actionData?.error && !!actionData?.data?.email;
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
@@ -134,12 +120,11 @@ export default function SendOTP() {
       title="Witaj na platformie VoucherTatry"
       subtitle="Podaj swój adres email aby założyć konto lub się zalogować. W obu wypadkach na Twój adres email zostanie wysłane jednorazowe hasło potrzebne w celu dalszej weryfikacji."
     >
-      <div className="mx-auto w-full space-y-6">
+      <div className="mx-auto w-full">
         <Form
           method="post"
           className="space-y-2"
           ref={zo.ref}
-          // onSubmit={onSubmit}
           replace
         >
           <Input
@@ -152,20 +137,6 @@ export default function SendOTP() {
             error={zo.errors.email()?.message}
             disabled={disabled}
           />
-
-          {/* <div
-              className={`mb-2 h-6 text-sm ${
-                actionData?.error ? "text-red-500" : ""
-              } ${otpRequestSuccess ? "text-green-600" : ""}`}
-            >
-              {!otpRequestSuccess ? actionData?.error : "Sprawdź email! ✌️"}
-            </div> */}
-
-          {/* <input
-              type="hidden"
-              name="redirectTo"
-              value={redirectTo}
-            /> */}
 
           <Button
             type="submit"

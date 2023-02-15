@@ -1,19 +1,27 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { z } from "zod";
 
 import {
   SESSION_ERROR_KEY,
   SESSION_KEY_AUTH,
+  SESSION_KEY_OTP_EMAIL,
   SESSION_MAX_AGE,
 } from "~/core/auth/const";
+import type { SupabaseAuthSession } from "~/core/integrations/supabase";
 import type { IUser } from "~/modules/user/queries";
 import { NODE_ENV, SESSION_SECRET } from "~/utils/env";
 import { safeRedirect } from "~/utils/http.server";
+
+const EmailSchema = z
+  .string()
+  .email("Nieprawidłowy adres email")
+  .transform((email) => email.toLowerCase());
 
 if (!SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
 }
 
-export interface AuthSession {
+export interface AuthSession extends Omit<SupabaseAuthSession, "user"> {
   access_token: string;
   refresh_token: string;
   expiresIn: number;
@@ -108,4 +116,13 @@ export async function destroyAuthSession(request: Request) {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },
   });
+}
+
+export async function hasValidSessionOTPEmail(request: Request) {
+  const session = await getSession(request);
+  const validateSessionOTPEmail = await EmailSchema.safeParseAsync(
+    session.get(SESSION_KEY_OTP_EMAIL)
+  );
+
+  return validateSessionOTPEmail.success;
 }

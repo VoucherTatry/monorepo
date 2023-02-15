@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -19,13 +18,14 @@ model User {
 }
 
 model Profile {
-  firstName   String
-  lastName    String
-  companyName String
-  userId      String    @unique
-  locationId  String?   @unique
-  location    Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization String
+  taxId        String
+  phone        String
+  status       ProfileStatus @default(PENDING)
+  userId       String        @id @unique
+  locationId   String?       @unique
+  location     Location?     @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Location {
@@ -82,6 +82,12 @@ model Page {
   viewCount Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum ProfileStatus {
+  ACTIVE
+  PENDING
+  REJECTED
 }
 
 enum Role {
