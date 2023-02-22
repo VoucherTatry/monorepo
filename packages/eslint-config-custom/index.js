@@ -30,6 +30,7 @@ module.exports = {
     'react/jsx-filename-extension': 'off',
     'react/jsx-no-comment-textnodes': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
+
     // @typescript-eslint
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
@@ -46,17 +47,24 @@ module.exports = {
     '@typescript-eslint/space-before-blocks': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     '@typescript-eslint/space-infix-ops': 'off',
+
     //import
     'import/no-default-export': 'error',
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal'],
+        groups: ['builtin', 'external', 'internal', 'type'],
         pathGroups: [
           {
             pattern: 'react',
             group: 'external',
             position: 'before',
+          },
+          {
+            pattern: '*.+(css|sass|less|scss|pcss|styl)',
+            patternOptions: { matchBase: true },
+            group: 'unknown',
+            position: 'after',
           },
         ],
         pathGroupsExcludedImportTypes: ['react'],

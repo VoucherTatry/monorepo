@@ -1,10 +1,5 @@
 import React from "react";
 
-import type {
-  MetaFunction,
-  LinksFunction,
-  LoaderFunction,
-} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,14 +9,19 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import type {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+} from "@remix-run/node";
+import type { IUser } from "~/modules/user/queries";
+
 import { Progress } from "~/components/Progress";
 import { getAuthSession } from "~/core/auth/session.server";
-import { getUserById } from "~/modules/user/queries";
-import type { IUser } from "~/modules/user/queries";
-import tailwindCSS from "~/tailwind.css";
 import { getBrowserEnv } from "~/utils/env";
 import { json, useLoaderData } from "~/utils/superjson-remix";
-// import baseCss from "~/styles/base.css";
+
+import tailwindCSS from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindCSS },
