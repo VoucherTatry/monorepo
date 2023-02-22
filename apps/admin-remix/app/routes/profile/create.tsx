@@ -1,8 +1,11 @@
-import type { ActionFunction } from "@remix-run/node";
+import { useState } from "react";
+
 import { json, redirect } from "@remix-run/node";
 import { Form, useTransition } from "@remix-run/react";
 import { useZorm } from "react-zorm";
 import { Button, Input } from "ui";
+
+import type { ActionFunction } from "@remix-run/node";
 
 import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
 import { requireAuthSession } from "~/core/auth/guards";
@@ -11,6 +14,7 @@ import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
 import { ProfileSchema } from "~/core/schemas";
 import { createProfile } from "~/modules/user/mutations/create-profile.server";
 import { assertIsPost } from "~/utils/http.server";
+import { validateNIP } from "~/utils/validateNIP";
 
 type ActionData = {
   errors?: {
@@ -25,7 +29,6 @@ export const action: ActionFunction = async ({ request }) => {
   const authSession = await requireAuthSession(request);
 
   const formPayload = Object.fromEntries(await request.formData());
-  // const formSchema = ProfileSchema.merge(LocationSchema);
 
   try {
     const newProfile = ProfileSchema.parse(formPayload);
@@ -69,6 +72,13 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function CreateProfile() {
+  const [validationErrors, setValidationErrors] = useState<
+    Record<"organization" | "taxId" | "phone", string | undefined>
+  >({
+    organization: undefined,
+    taxId: undefined,
+    phone: undefined,
+  });
   const zo = useZorm("create-profile", ProfileSchema);
   const transition = useTransition();
   const disabled =
@@ -77,7 +87,7 @@ export default function CreateProfile() {
   return (
     <AuthFormWrapper
       title="Uzupełnij swój profil"
-      subtitle="Do prawidłowego funkcjonowania platformy potrzebujemy kilka danych."
+      subtitle="Do poprawnego zweryfikowania i aktywacji Twojego konta, potrzebujemy poniższych danych."
     >
       <div className="mx-auto w-full">
         <Form
@@ -93,7 +103,10 @@ export default function CreateProfile() {
             autoComplete="organization"
             id={zo.fields.organization()}
             name={zo.fields.organization()}
-            error={zo.errors.organization()?.message}
+            error={
+              zo.errors.organization()?.message ||
+              validationErrors?.organization
+            }
             disabled={disabled}
           />
 
@@ -101,10 +114,35 @@ export default function CreateProfile() {
             label="Numer NIP"
             required
             type="text"
+            pattern="[0-9]+"
+            title="Numer NIP może się składać wyłącznie z cyfr"
             autoComplete="off"
+            onChange={() => {
+              if (validationErrors?.taxId) {
+                setValidationErrors((errors) => ({
+                  ...errors,
+                  taxId: undefined,
+                }));
+              }
+            }}
+            onBlur={(e) => {
+              if (e.target.value.trim() === "") {
+                return setValidationErrors((errors) => ({
+                  ...errors,
+                  taxId: "Numer NIP jest polem wymaganym",
+                }));
+              }
+
+              if (!validateNIP(e.target.value)) {
+                return setValidationErrors((errors) => ({
+                  ...errors,
+                  taxId: "Nieprawidłowy numer NIP",
+                }));
+              }
+            }}
             id={zo.fields.taxId()}
             name={zo.fields.taxId()}
-            error={zo.errors.taxId()?.message}
+            error={zo.errors.taxId()?.message || validationErrors?.taxId}
             disabled={disabled}
           />
 
@@ -112,10 +150,12 @@ export default function CreateProfile() {
             label="Numer telefonu"
             required
             type="tel"
+            pattern="(+48)?[0-9]{9}"
+            title="Proszę podać prawidłowy numer telefonu"
             autoComplete="tel"
             id={zo.fields.phone()}
             name={zo.fields.phone()}
-            error={zo.errors.phone()?.message}
+            error={zo.errors.phone()?.message || validationErrors?.phone}
             disabled={disabled}
           />
 
@@ -124,6 +164,7 @@ export default function CreateProfile() {
             size="md"
             width="w-full"
             disabled={disabled}
+            loading={disabled}
           >
             Zapisz dane
           </Button>

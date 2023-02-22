@@ -1,6 +1,9 @@
 import { ProfileStatus } from "@prisma/client";
+import { redirect } from "@remix-run/node";
 
 import type { IUser } from "~/modules/user/queries";
+
+import { getCurrentPath } from "./http.server";
 
 export function getGaurdedPath({
   path,
@@ -9,7 +12,6 @@ export function getGaurdedPath({
   path: string;
   user?: IUser | null;
 }) {
-  console.log({ path, user, profile: user?.profile });
   if (!user) {
     return "/auth";
   }
@@ -19,11 +21,12 @@ export function getGaurdedPath({
   }
 
   if (user.profile?.status) {
+    console.log(user);
     switch (user.profile.status) {
       case ProfileStatus.PENDING:
-        return "/profile/review-pending";
+        return "/profile/review/pending";
       case ProfileStatus.REJECTED:
-        return "/prfile/review-rejected";
+        return "/profile/review/rejected";
       case ProfileStatus.ACTIVE:
       default:
         if (path.startsWith("/profile")) {
@@ -34,4 +37,13 @@ export function getGaurdedPath({
   }
 
   return path;
+}
+
+export function guardPath(request: Request, user?: IUser | null) {
+  const currentPath = getCurrentPath(request);
+  const pathToRedirect = getGaurdedPath({ path: "/", user });
+
+  if (pathToRedirect !== currentPath) {
+    throw redirect(pathToRedirect);
+  }
 }

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { TAnimation, THeight, TWidth } from 'tailwindcss-classnames';
+
+import type { TAnimation, THeight, TWidth } from 'tailwindcss-classnames';
 
 type SpinnerProps = {
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';

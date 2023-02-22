@@ -8,9 +8,12 @@ import type {
   PolymorphicProps,
 } from '../PolymorphicComponent';
 
+import { Spinner } from '../Loading/Spinner';
+
 type CustomProps = {
   size?: 'xl' | 'lg' | 'md' | 'sm' | 'xs';
   width?: TWidth;
+  loading?: boolean;
 };
 
 type LinkButtonProps = CustomProps &
@@ -46,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {children}
+        {props.loading ? <Spinner size="xs" className="m-[2.5px]" /> : children}
       </button>
     );
   }

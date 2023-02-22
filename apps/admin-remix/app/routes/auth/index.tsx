@@ -1,4 +1,3 @@
-import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -9,6 +8,8 @@ import {
 import { parseFormAny, useZorm } from "react-zorm";
 import { Button, Input } from "ui";
 import { z } from "zod";
+
+import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
 import { SESSION_KEY_OTP_EMAIL } from "~/core/auth/const";
@@ -143,6 +144,7 @@ export default function SendOTP() {
             size="md"
             width="w-full"
             disabled={disabled}
+            loading={disabled}
           >
             Wyślij jednorazowe hasło
           </Button>

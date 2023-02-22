@@ -8,5 +8,6 @@ module.exports = {
   future: {
     unstable_postcss: true,
     unstable_tailwind: true,
+    unstable_cssModules: true,
   },
 };

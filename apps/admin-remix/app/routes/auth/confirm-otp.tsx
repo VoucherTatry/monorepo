@@ -1,9 +1,10 @@
-import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useSearchParams, useTransition } from "@remix-run/react";
 import { parseFormAny, useZorm } from "react-zorm";
 import { Button, Input } from "ui";
 import { z } from "zod";
+
+import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
 import { otpSignIn } from "~/core/auth/mutations/otp-sign-in";
