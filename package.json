@@ -8,7 +8,7 @@
     "lint": "turbo run lint",
     "lint-fix": "turbo run lint-fix",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prepare": "husky install",
     "generate-css-types": "turbo run generate-css-types"
   },

@@ -1,7 +1,7 @@
-import type { Location } from "@prisma/client";
 import { z } from "zod";
 
-import type { ZodShape } from "~/utils/zod-types";
+import type { Location } from "@prisma/client";
+import type { ZodShape } from "~/utils/zod";
 
 export type LocationSchemaFields = Omit<Location, "id">;
 type LocationSchemaShape = ZodShape<LocationSchemaFields>;

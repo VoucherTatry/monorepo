@@ -2,8 +2,9 @@ import { PencilIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
-import { useMatchesData } from "~/core/hooks";
 import type { UserData } from "~/routes/users/$userId";
+
+import { useMatchesData } from "~/core/hooks";
 
 export default function User() {
   const userData = useMatchesData<UserData>("routes/users/$userId");
@@ -58,19 +59,21 @@ export default function User() {
         </h3>
         <div className="flex flex-col space-y-2">
           <div className="flex flex-col">
-            <span className="text-sm text-stone-400 font-bold">Imię:</span>
-            <span>{user.profile.firstName}</span>
+            <span className="text-sm text-stone-400 font-bold">
+              Nazwa firmy:
+            </span>
+            <span>{user.profile.organization}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm text-stone-400 font-bold">Nazwisko:</span>
-            <span>{user.profile.lastName}</span>
+            <span className="text-sm text-stone-400 font-bold">Numer NIP:</span>
+            <span>{user.profile.taxId}</span>
           </div>
 
           <div className="flex flex-col">
             <span className="text-sm text-stone-400 font-bold">
-              Nazwa firmy:
+              Numer telefonu:
             </span>
-            <span>{user.profile.companyName}</span>
+            <span>{user.profile.phone}</span>
           </div>
         </div>
       </div>

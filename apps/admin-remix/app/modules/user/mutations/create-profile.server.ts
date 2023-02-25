@@ -20,11 +20,8 @@ export async function createProfile({
       },
     },
   };
-  return db.profile.upsert({
-    where: {
-      userId,
-    },
-    create: data,
-    update: data,
+
+  return db.profile.create({
+    data,
   });
 }

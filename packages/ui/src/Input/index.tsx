@@ -38,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           {leftAddon && (
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 w-7 h-full">
               {leftAddon}
             </div>
           )}
@@ -48,11 +48,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             aria-errormessage={error ?? undefined}
             ref={ref}
             className={clsx(
-              'block w-full rounded-md pr-9 text-sm transition disabled:cursor-not-allowed disabled:bg-stone-300 disabled:opacity-75',
+              'block w-full rounded-md text-sm transition disabled:cursor-not-allowed disabled:bg-stone-300 disabled:opacity-75 px-9',
               {
-                'focus:border-primary-400 focus:ring-primary-500 border-stone-300':
+                'border-stone-300 focus:border-primary-500 focus:ring-primary-300 focus:ring-2':
                   !error,
-                'border-red-600 focus:border-red-600 focus:ring-red-600':
+                'border-red-600 focus:border-red-600 focus:ring-red-300 focus:ring-2':
                   !!error,
               }
             )}
@@ -61,7 +61,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightAddon && (
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 w-7 h-full">
               {rightAddon}
             </div>
           )}

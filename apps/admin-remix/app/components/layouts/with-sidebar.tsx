@@ -192,7 +192,7 @@ export function WithSidebar({ children }: { children: React.ReactNode }) {
                   className="leading-none"
                   to={`/users/${user.id}`}
                 >
-                  {user.profile?.companyName ?? user.email}
+                  {user.profile?.organization ?? user.email}
                 </Link>
                 {isAdmin && (
                   <span className="rounded-full border border-stone-300 bg-stone-300 px-2 py-0.5 text-xs font-medium text-stone-800">

@@ -8,12 +8,8 @@ export function isAdmin(role?: Role) {
 }
 
 export function getUserDisplayName(user: IUser) {
-  if (user.profile?.companyName) {
-    return user.profile?.companyName;
-  }
-
-  if (user.profile?.firstName && user.profile?.lastName) {
-    return `${user.profile?.firstName} ${user.profile?.lastName}`;
+  if (user.profile?.organization) {
+    return user.profile?.organization;
   }
 
   return user.email;

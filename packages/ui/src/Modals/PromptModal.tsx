@@ -16,7 +16,6 @@ export function PromptModal({ children, isOpen, onDismiss }: PromptModalProps) {
         as="div"
         className="relative z-50"
         aria-labelledby="modal-title"
-        role="dialog"
         aria-modal="true"
       >
         <Transition.Child
