@@ -48,11 +48,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             aria-errormessage={error ?? undefined}
             ref={ref}
             className={clsx(
-              'block w-full rounded-md text-sm transition disabled:cursor-not-allowed disabled:bg-stone-300 disabled:opacity-75 px-9',
+              'block w-full rounded-md transition px-9',
+              'focus:ring-2 focus:ring-offset-1',
+              'disabled:cursor-not-allowed disabled:bg-stone-300 disabled:opacity-75 ',
               {
-                'border-stone-300 focus:border-primary-500 focus:ring-primary-300 focus:ring-2':
+                'border-stone-300 focus:border-primary-500 focus:ring-primary-300':
                   !error,
-                'border-red-600 focus:border-red-600 focus:ring-red-300 focus:ring-2':
+                'border-red-600 focus:border-red-600 focus:ring-red-300':
                   !!error,
               }
             )}

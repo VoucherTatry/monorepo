@@ -88,7 +88,7 @@ export default function LoginPage() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
   const transition = useTransition();
-  const disabled =
+  const loading =
     transition.state === "submitting" || transition.state === "loading";
 
   return (
@@ -115,7 +115,7 @@ export default function LoginPage() {
             id={zo.fields.token()}
             name={zo.fields.token()}
             error={zo.errors.token()?.message}
-            disabled={disabled}
+            disabled={loading}
           />
           <input
             type="hidden"
@@ -126,7 +126,8 @@ export default function LoginPage() {
             type="submit"
             size="md"
             width="w-full"
-            disabled={disabled}
+            disabled={loading}
+            loading={loading}
           >
             Zaloguj się
           </Button>

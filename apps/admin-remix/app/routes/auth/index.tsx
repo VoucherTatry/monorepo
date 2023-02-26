@@ -113,7 +113,7 @@ export const meta: MetaFunction = () => ({
 export default function SendOTP() {
   const zo = useZorm("SendOTPForm", SendOTPFormSchema);
   const transition = useTransition();
-  const disabled =
+  const loading =
     transition.state === "submitting" || transition.state === "loading";
 
   return (
@@ -136,15 +136,15 @@ export default function SendOTP() {
             id={zo.fields.email()}
             name={zo.fields.email()}
             error={zo.errors.email()?.message}
-            disabled={disabled}
+            disabled={loading}
           />
 
           <Button
             type="submit"
             size="md"
             width="w-full"
-            disabled={disabled}
-            loading={disabled}
+            disabled={loading}
+            loading={loading}
           >
             Wyślij jednorazowe hasło
           </Button>

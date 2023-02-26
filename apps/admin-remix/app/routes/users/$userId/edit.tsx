@@ -111,7 +111,7 @@ export default function EditProfile() {
             zo.errors.organization()?.message ||
             fieldErrors?.organization?.join(", ")
           }
-          disabled={disabled}
+          disabled={loading}
         />
 
         <Input
@@ -125,7 +125,7 @@ export default function EditProfile() {
           id={zo.fields.taxId()}
           name={zo.fields.taxId()}
           error={zo.errors.taxId()?.message || fieldErrors?.taxId?.join(", ")}
-          disabled={disabled}
+          disabled={loading}
         />
 
         <Input
@@ -138,7 +138,7 @@ export default function EditProfile() {
           id={zo.fields.phone()}
           name={zo.fields.phone()}
           error={zo.errors.phone()?.message || fieldErrors?.phone?.join(", ")}
-          disabled={disabled}
+          disabled={loading}
         />
 
         <Button
@@ -146,7 +146,7 @@ export default function EditProfile() {
           size="md"
           width="w-full"
           disabled={disabled}
-          loading={disabled}
+          loading={loading}
         >
           Zapisz dane
         </Button>

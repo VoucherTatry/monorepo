@@ -38,7 +38,7 @@ const getSizeCN = (size?: string) => {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button({ children, width = 'w-auto', ...props }, ref) {
+  function Button({ children, loading, width = 'w-auto', ...props }, ref) {
     return (
       <button
         className={clsx(
@@ -49,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {props.loading ? <Spinner size="xs" className="m-[2.5px]" /> : children}
+        {loading ? <Spinner size="xs" className="m-[2.5px]" /> : children}
       </button>
     );
   }
