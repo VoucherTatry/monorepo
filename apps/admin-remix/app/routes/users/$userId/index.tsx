@@ -4,7 +4,7 @@ import { LinkButton } from "ui";
 
 import type { UserData } from "~/routes/users/$userId";
 
-import { useMatchesData } from "~/core/hooks";
+import { useMatchesData } from "~/hooks";
 
 export default function User() {
   const userData = useMatchesData<UserData>("routes/users/$userId");

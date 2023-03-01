@@ -7,12 +7,12 @@ import { Button, Input } from "ui";
 import type { ActionFunction } from "@remix-run/node";
 import type { ZodError } from "zod";
 
-import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
-import { phoneRegExp, ProfileSchema } from "~/core/schemas";
-import { createProfile } from "~/modules/user/mutations/create-profile.server";
+import { requireAuthSession } from "~/modules/auth";
+import { AuthFormWrapper } from "~/modules/auth/components/auth-form-wrapper";
+import { mapAuthSession } from "~/modules/auth/mappers";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { createProfile } from "~/modules/profile/mutations";
+import { phoneRegExp, ProfileSchema } from "~/schemas";
 import { assertIsPost } from "~/utils/http.server";
 
 type ActionData = {
@@ -51,12 +51,15 @@ export const action: ActionFunction = async ({ request }) => {
       userId: authSession.userId,
     });
 
-    const updatedAuthSession = mapAuthSession(authSession, {
-      ...authSession.user!,
-      profile,
+    const updatedAuthSession = await mapAuthSession({
+      ...authSession,
+      user: {
+        ...authSession.user!,
+        profile,
+      },
     });
 
-    return redirect("/profile/review-pending", {
+    return redirect("/profile/review/pending", {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
           authSession: updatedAuthSession,
@@ -64,10 +67,9 @@ export const action: ActionFunction = async ({ request }) => {
       },
     });
   } catch (error: unknown) {
-    console.error(JSON.stringify(error, null, 2));
-
     return json<ActionData>(
       {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         errors: error as any,
       },
       {
@@ -120,8 +122,8 @@ export default function CreateProfile() {
           <Input
             label="Numer NIP"
             type="text"
-            pattern="[0-9]+"
-            maxLength={6}
+            pattern="[\s\-\d]+"
+            maxLength={10}
             title="Numer NIP może się składać wyłącznie z cyfr"
             autoComplete="off"
             id={zo.fields.taxId()}

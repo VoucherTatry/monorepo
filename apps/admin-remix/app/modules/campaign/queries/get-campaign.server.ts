@@ -1,8 +1,8 @@
 import type { Campaign, Category } from "@prisma/client";
+import type { IUser } from "~/modules/user";
 
-import { db } from "~/core/database";
+import { db } from "~/database";
 import { isAdmin } from "~/modules/user/helpers";
-import type { IUser } from "~/modules/user/queries";
 
 export type UserCampaign = Campaign & {
   categories: Category[];

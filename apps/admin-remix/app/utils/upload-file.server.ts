@@ -1,4 +1,4 @@
-import { getSupabaseAdmin } from "~/core/integrations/supabase/supabase";
+import { getSupabaseAdmin } from "~/integrations/supabase/supabase";
 
 async function convertToFile(
   data: AsyncIterable<Uint8Array>,

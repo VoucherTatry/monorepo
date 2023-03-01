@@ -1,4 +1,3 @@
-import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import { useZorm } from "react-zorm";
@@ -8,11 +7,11 @@ import type { ActionFunction } from "@remix-run/node";
 import type { ZodError } from "zod";
 import type { UserData } from "~/routes/users/$userId";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { useMatchesData } from "~/core/hooks";
-import { ProfileSchema } from "~/core/schemas";
-import { updateProfile } from "~/modules/user/mutations/update-profile.server";
+import { useMatchesData } from "~/hooks";
+import { requireAuthSession } from "~/modules/auth";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { updateProfile } from "~/modules/profile/mutations";
+import { ProfileSchema } from "~/schemas";
 import { assertIsPost } from "~/utils/http.server";
 
 type ActionData = {
@@ -55,14 +54,18 @@ export const action: ActionFunction = async ({ request }) => {
 
     return redirect(`/users/${profile.userId}`, {
       headers: {
-        "Set-Cookie": await commitAuthSession(request, { authSession }),
+        "Set-Cookie": await commitAuthSession(request, {
+          authSession: {
+            ...authSession,
+            user: { ...authSession.user, profile },
+          },
+        }),
       },
     });
   } catch (error) {
-    console.error(JSON.stringify(error, null, 2));
-
     return json<ActionData>(
       {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         errors: error as any,
       },
       {

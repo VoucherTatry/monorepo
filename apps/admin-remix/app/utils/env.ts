@@ -14,7 +14,6 @@ declare global {
     interface ProcessEnv {
       SUPABASE_URL: string;
       SUPABASE_SERVICE_ROLE: string;
-      SERVER_URL: string;
       SUPABASE_ANON_PUBLIC: string;
       SESSION_SECRET: string;
     }
@@ -25,7 +24,7 @@ type EnvOptions = {
   isSecret?: boolean;
   isRequired?: boolean;
 };
-function getEnv(
+export function getEnv(
   name: string,
   { isRequired, isSecret }: EnvOptions = { isSecret: true, isRequired: true }
 ) {
@@ -45,7 +44,6 @@ function getEnv(
 /**
  * Server env
  */
-export const SERVER_URL = getEnv("SERVER_URL");
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
 

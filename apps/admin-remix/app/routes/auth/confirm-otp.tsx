@@ -6,22 +6,22 @@ import { z } from "zod";
 
 import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 
-import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
-import { otpSignIn } from "~/core/auth/mutations/otp-sign-in";
+import { AuthFormWrapper } from "~/modules/auth/components/auth-form-wrapper";
+import { otpSignIn } from "~/modules/auth/mutations/otp-sign-in";
 import {
   createAuthSession,
   getAuthSession,
   hasValidSessionOTPEmail,
-} from "~/core/auth/session.server";
+} from "~/modules/auth/session.server";
 import { getGaurdedPath } from "~/utils/getGuardedPath";
 import { assertIsPost } from "~/utils/http.server";
 
 const ConfirmOTPSchema = z.object({
   token: z
     .string()
-    .regex(/^\d+$/)
-    .min(6, "token-too-short")
-    .max(6, "token-too-long"),
+    .regex(/^\d+$/, "Token może składać się wyłącznie z cyfr.")
+    .min(6, "Token zbyt krótki")
+    .max(6, "Token zbyt długi"),
   redirectTo: z.string().optional(),
 });
 

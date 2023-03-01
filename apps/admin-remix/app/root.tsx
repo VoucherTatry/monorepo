@@ -14,10 +14,10 @@ import type {
   LinksFunction,
   LoaderFunction,
 } from "@remix-run/node";
-import type { IUser } from "~/modules/user/queries";
+import type { IUser } from "~/modules/user";
 
 import { Progress } from "~/components/Progress";
-import { getAuthSession } from "~/core/auth/session.server";
+import { getAuthSession } from "~/modules/auth/session.server";
 import { getBrowserEnv } from "~/utils/env";
 import { json, useLoaderData } from "~/utils/superjson-remix";
 
@@ -25,15 +25,14 @@ import tailwindCSS from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindCSS },
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  { rel: "preconnect", href: "https://fonts.gstatic.com" },
+  { rel: "preconnect", href: "https://fonts.bunny.net" },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap",
+    href: "https://fonts.bunny.net/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap",
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+    href: "https://fonts.bunny.net/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
   },
 ];
 
@@ -79,11 +78,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 };
 
-interface DocumentProps {
-  children: React.ReactNode;
-}
-
-const Document = ({ children }: DocumentProps) => {
+export default function App() {
   const { ENV } = useLoaderData<RootData>();
 
   return (
@@ -94,7 +89,7 @@ const Document = ({ children }: DocumentProps) => {
       </head>
       <body className="bg-stone-100 antialiased">
         <Progress />
-        {children}
+        <Outlet />
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
@@ -105,13 +100,5 @@ const Document = ({ children }: DocumentProps) => {
         <LiveReload />
       </body>
     </html>
-  );
-};
-
-export default function App() {
-  return (
-    <Document>
-      <Outlet />
-    </Document>
   );
 }

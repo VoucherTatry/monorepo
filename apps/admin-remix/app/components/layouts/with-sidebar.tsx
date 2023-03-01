@@ -16,7 +16,7 @@ import { HamburgerMenuButton } from "ui";
 import { Breadcrumbs } from "~/components/breadcrumbs";
 import { LogoHorizontal } from "~/components/logo";
 import { LogoutButton } from "~/components/logout-button";
-import { useAppData } from "~/core/hooks/use-app-data";
+import { useAppData } from "~/hooks/use-app-data";
 
 function SidebarMenuItem({
   children,

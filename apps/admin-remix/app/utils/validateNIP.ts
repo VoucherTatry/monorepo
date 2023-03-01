@@ -1,9 +1,9 @@
 export const validateNIP = (nip: string | number) => {
   if (typeof nip === "number") {
     nip = nip.toString();
-  } else {
-    nip = nip.replace(/-/g, "");
   }
+
+  nip = nip.replace(/[ -]/g, "");
 
   if (nip.length !== 10) {
     return false;

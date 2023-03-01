@@ -1,18 +1,19 @@
 import { useState } from "react";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
-import type { LoaderFunction } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Button } from "ui";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { json, useLoaderData } from "~/utils/superjson-remix";
+import { requireAuthSession } from "~/modules/auth";
 import { DeleteConfirmModal } from "~/modules/campaign/components/delete-confirm-modal";
-import type { UserCampaign } from "~/modules/campaign/queries";
 import { getCampaignById } from "~/modules/campaign/queries";
 import { getUserDisplayName, isAdmin } from "~/modules/user/helpers";
-import type { IUser } from "~/modules/user/queries";
+import { json, useLoaderData } from "~/utils/superjson-remix";
+
+import type { LoaderFunction } from "@remix-run/node";
+import type { UserCampaign } from "~/modules/campaign/queries";
+import type { IUser } from "~/modules/user";
 
 type LoaderData = {
   campaign: UserCampaign;

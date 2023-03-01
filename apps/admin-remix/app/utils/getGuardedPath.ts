@@ -1,7 +1,7 @@
 import { ProfileStatus } from "@prisma/client";
 import { redirect } from "@remix-run/node";
 
-import type { IUser } from "~/modules/user/queries";
+import type { IUser } from "~/modules/user";
 
 import { getCurrentPath } from "./http.server";
 
@@ -21,7 +21,6 @@ export function getGaurdedPath({
   }
 
   if (user.profile?.status) {
-    console.log(user);
     switch (user.profile.status) {
       case ProfileStatus.PENDING:
         return "/profile/review/pending";

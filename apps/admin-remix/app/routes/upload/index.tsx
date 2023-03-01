@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import {
   unstable_composeUploadHandlers,
   json,
@@ -8,8 +7,10 @@ import {
 } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+
+import { requireAuthSession } from "~/modules/auth";
+import { commitAuthSession } from "~/modules/auth/session.server";
 import { uploadFile } from "~/utils/upload-file.server";
 
 export const loader: LoaderFunction = ({ request }) =>

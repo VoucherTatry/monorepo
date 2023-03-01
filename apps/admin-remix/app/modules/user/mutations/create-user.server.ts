@@ -1,7 +1,8 @@
-import { deleteAuthAccount } from "~/core/auth/mutations";
-import type { AuthSession } from "~/core/auth/session.server";
-import { db } from "~/core/database";
-import type { IUser } from "~/modules/user/queries";
+import type { AuthSession } from "~/modules/auth/types";
+import type { IUser } from "~/modules/user/types";
+
+import { db } from "~/database";
+import { deleteAuthAccount } from "~/modules/auth/service.server";
 
 async function createUser({
   email,

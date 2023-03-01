@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import { db } from "~/core/database";
+import { db } from "~/database";
 
 export async function createCampaign({
   title,

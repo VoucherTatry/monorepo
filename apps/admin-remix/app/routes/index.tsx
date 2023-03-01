@@ -1,9 +1,11 @@
 import { redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { WithSidebar } from "~/components/layouts/with-sidebar";
-import { requireAuthSession } from "~/core/auth/guards";
-import { useAppData } from "~/core/hooks/use-app-data";
+import { useAppData } from "~/hooks/use-app-data";
+import { requireAuthSession } from "~/modules/auth";
 import { getGaurdedPath } from "~/utils/getGuardedPath";
 import { getCurrentPath } from "~/utils/http.server";
 
@@ -16,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect(pathToRedirect);
   }
 
-  return null;
+  return { user };
 };
 
 export const meta: MetaFunction = () => ({
@@ -24,7 +26,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function Index() {
-  const { user } = useAppData();
+  const { user } = useLoaderData();
 
   return (
     <WithSidebar>

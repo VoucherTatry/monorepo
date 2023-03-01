@@ -1,7 +1,8 @@
-import type { TypedResponse } from "@remix-run/node";
 import { json as remixJson } from "@remix-run/node";
 import { useLoaderData as useRemixLoaderData } from "@remix-run/react";
 import { parse, stringify } from "superjson";
+
+import type { TypedResponse } from "@remix-run/node";
 
 export const json = <Data>(
   obj: Data,

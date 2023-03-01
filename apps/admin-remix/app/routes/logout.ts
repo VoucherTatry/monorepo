@@ -1,7 +1,8 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 
-import { destroyAuthSession } from "~/core/auth/session.server";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+
+import { destroyAuthSession } from "~/modules/auth/session.server";
 import { assertIsPost } from "~/utils/http.server";
 
 export const action: ActionFunction = async ({ request }) => {

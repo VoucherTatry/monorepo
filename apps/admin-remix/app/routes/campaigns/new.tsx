@@ -1,18 +1,19 @@
 import * as React from "react";
 
-import type { Location } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
 import { json, redirect } from "@remix-run/node";
-import type { ActionFunction } from "@remix-run/node";
 import { Form, useTransition } from "@remix-run/react";
 import { parseFormAny, useZorm } from "react-zorm";
 import { Input } from "ui";
 import { z } from "zod";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
+import { requireAuthSession } from "~/modules/auth";
+import { commitAuthSession } from "~/modules/auth/session.server";
 import { createCampaign } from "~/modules/campaign/mutations";
 import { assertIsPost } from "~/utils/http.server";
+
+import type { Location } from "@prisma/client";
+import type { ActionFunction } from "@remix-run/node";
 
 export const NewCampaignFormSchema = z.object({
   title: z.string().min(2, "require-title"),

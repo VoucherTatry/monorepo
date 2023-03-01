@@ -1,11 +1,12 @@
-import type { LoaderFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { json } from "~/utils/superjson-remix";
-import type { IUser } from "~/modules/user/queries";
+import type { LoaderFunction } from "@remix-run/node";
+import type { IUser } from "~/modules/user";
+
+import { requireAuthSession } from "~/modules/auth";
 import { getUserById } from "~/modules/user/queries";
+import { json } from "~/utils/superjson-remix";
 
 export type UserData = {
   user: IUser;

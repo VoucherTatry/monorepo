@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 
-import type { IUser } from "./queries";
+import type { IUser } from "~/modules/user/types";
 
 export function isAdmin(role?: Role) {
   if (!role) return false;

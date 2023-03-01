@@ -1,32 +1,19 @@
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import type { LoaderFunction } from "@remix-run/node";
 
-import { AuthWrapper } from "~/components/layouts/auth-wrapper";
-import { assertAuthSession } from "~/core/auth/guards/assert-auth-session.server";
-import {
-  commitAuthSession,
-  destroyAuthSession,
-} from "~/core/auth/session.server";
-import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
-import { getUserById } from "~/modules/user/queries";
+import { assertAuthSession } from "~/modules/auth";
+import { AuthWrapper } from "~/modules/auth/components/auth-wrapper";
 import { guardPath } from "~/utils/getGuardedPath";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await assertAuthSession(request);
-
-  const user = await getUserById(authSession.userId);
-
-  if (!user) {
-    destroyAuthSession(request);
-    return redirect("/");
-  }
+  const user = authSession.user;
 
   guardPath(request, user);
 
-  const updatedSession = mapAuthSession(authSession, user);
-  return commitAuthSession(request, { authSession: updatedSession });
+  return json({});
 };
 
 export default function CreateProfile() {

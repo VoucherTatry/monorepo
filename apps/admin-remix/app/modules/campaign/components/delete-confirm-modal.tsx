@@ -1,7 +1,8 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Form } from "@remix-run/react";
-import type { PromptModalProps } from "ui";
 import { Button, PromptModal } from "ui";
+
+import type { PromptModalProps } from "ui";
 
 export const DeleteConfirmModal = ({
   isOpen,

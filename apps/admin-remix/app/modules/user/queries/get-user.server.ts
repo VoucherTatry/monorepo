@@ -1,10 +1,7 @@
-import type { Profile, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import type { IUser } from "~/modules/user/types";
 
-import { db } from "~/core/database";
-
-export interface IUser extends User {
-  profile: Profile | null;
-}
+import { db } from "~/database";
 
 export async function getUserByEmail(
   email: User["email"]

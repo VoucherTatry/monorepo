@@ -1,9 +1,10 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
-import { AuthWrapper } from "~/components/layouts/auth-wrapper";
-import { getAuthSession } from "~/core/auth/session.server";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+
+import { AuthWrapper } from "~/modules/auth/components/auth-wrapper";
+import { getAuthSession } from "~/modules/auth/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);

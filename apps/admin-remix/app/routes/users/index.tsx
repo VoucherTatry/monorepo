@@ -3,11 +3,12 @@ import {
   ExclamationCircleIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
-import type { LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { LinkButton, Table, Td, Th, THead, Tr } from "ui";
 
-import type { IUser } from "~/modules/user/queries";
+import type { LoaderFunction } from "@remix-run/node";
+import type { IUser } from "~/modules/user";
+
 import { getAllUsers } from "~/modules/user/queries/get-users.server";
 import { json, useLoaderData } from "~/utils/superjson-remix";
 

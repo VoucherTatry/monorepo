@@ -11,14 +11,14 @@ import { z } from "zod";
 
 import type { ActionArgs, LoaderFunction, MetaFunction } from "@remix-run/node";
 
-import { AuthFormWrapper } from "~/components/layouts/auth-form-wrapper";
-import { SESSION_KEY_OTP_EMAIL } from "~/core/auth/const";
-import { sendMagicLink } from "~/core/auth/mutations";
+import { AuthFormWrapper } from "~/modules/auth/components/auth-form-wrapper";
+import { SESSION_KEY_OTP_EMAIL } from "~/modules/auth/const";
+import { sendMagicLink } from "~/modules/auth/mutations";
 import {
   commitSession,
   getAuthSession,
   getSession,
-} from "~/core/auth/session.server";
+} from "~/modules/auth/session.server";
 import { assertIsPost } from "~/utils/http.server";
 
 const SendOTPFormSchema = z.object({
@@ -67,6 +67,7 @@ export const action = async ({ request }: ActionArgs) => {
   const { error } = await sendMagicLink(result.data.email);
 
   if (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
 
     if ("status" in error && error["status"] === 429) {

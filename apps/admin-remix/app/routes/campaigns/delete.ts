@@ -1,10 +1,11 @@
-import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { assertIsDelete } from "~/utils/http.server";
+import { requireAuthSession } from "~/modules/auth";
 import { deleteCampaign } from "~/modules/campaign/mutations";
+import { assertIsDelete } from "~/utils/http.server";
+
+import type { ActionFunction } from "@remix-run/node";
 
 export const action: ActionFunction = async ({ request }) => {
   assertIsDelete(request);

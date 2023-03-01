@@ -1,22 +1,23 @@
 // import { BreadcrumbLink } from "@chakra-ui/react";
 import { GlobeEuropeAfricaIcon } from "@heroicons/react/24/outline";
-import type { LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { notFound } from "~/utils/http.server";
-import { json, useLoaderData } from "~/utils/superjson-remix";
+import { requireAuthSession } from "~/modules/auth";
 import {
   CampaignsTable,
   CampaignsTableBody,
 } from "~/modules/campaign/components/campaigns-table";
-import type { ICampaigns } from "~/modules/campaign/queries";
 import {
   getCampaignsByUserId,
   getAllCampaigns,
 } from "~/modules/campaign/queries";
 import { isAdmin } from "~/modules/user/helpers";
+import { notFound } from "~/utils/http.server";
+import { json, useLoaderData } from "~/utils/superjson-remix";
+
+import type { LoaderFunction } from "@remix-run/node";
+import type { ICampaigns } from "~/modules/campaign/queries";
 
 // export const handle = {
 //   breadcrumb: () => {

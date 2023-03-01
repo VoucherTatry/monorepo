@@ -1,7 +1,7 @@
 import type { Category, User } from "@prisma/client";
+import type { IUser } from "~/modules/user";
 
-import { db } from "~/core/database";
-import type { IUser } from "~/modules/user/queries";
+import { db } from "~/database";
 
 const CAMPAIGNS_SELECT = {
   id: true,

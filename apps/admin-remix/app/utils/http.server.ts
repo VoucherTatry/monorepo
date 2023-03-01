@@ -8,7 +8,7 @@ export function makeRedirectToFromHere(request: Request) {
     return null;
   }
 
-  return new URLSearchParams([["redirectTo", getCurrentPath(request)]]);
+  return new URLSearchParams([["redirectTo", currentPath]]);
 }
 
 export function getRedirectTo(request: Request, defaultRedirectTo = "/") {

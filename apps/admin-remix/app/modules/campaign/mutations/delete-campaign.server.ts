@@ -1,7 +1,8 @@
-import type { Campaign, User } from "@prisma/client";
 import { Role } from "@prisma/client";
 
-import { db } from "~/core/database";
+import type { Campaign, User } from "@prisma/client";
+
+import { db } from "~/database";
 
 export async function deleteCampaign({
   id,
