@@ -2,12 +2,12 @@ import { PencilIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
-import type { UserData } from "~/routes/users/$userId";
+import type { UserData } from "~/modules/user";
 
 import { useMatchesData } from "~/hooks";
 
 export default function User() {
-  const userData = useMatchesData<UserData>("routes/users/$userId");
+  const userData = useMatchesData<UserData>("routes/users.$userId");
   const user = userData?.user;
 
   if (!user) {

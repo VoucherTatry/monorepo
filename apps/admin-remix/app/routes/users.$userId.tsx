@@ -2,15 +2,11 @@ import { Outlet } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import type { LoaderFunction } from "@remix-run/node";
-import type { IUser } from "~/modules/user";
+import type { UserData } from "~/modules/user";
 
 import { requireAuthSession } from "~/modules/auth";
 import { getUserById } from "~/modules/user/queries";
 import { json } from "~/utils/superjson-remix";
-
-export type UserData = {
-  user: IUser;
-};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireAuthSession(request);

@@ -2,12 +2,12 @@ import { FolderPlusIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { LinkButton } from "ui";
 
+import type { Category } from "@prisma/client";
+import type { LoaderFunction } from "@remix-run/node";
+
 import { requireAuthSession } from "~/modules/auth";
 import { getCategories } from "~/modules/categories/queries";
 import { json, useLoaderData } from "~/utils/superjson-remix";
-
-import type { Category } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
 
 type LoaderData = {
   categories: Category[];

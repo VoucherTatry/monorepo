@@ -5,15 +5,15 @@ import { useCatch } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Button } from "ui";
 
+import type { LoaderFunction } from "@remix-run/node";
+import type { UserCampaign } from "~/modules/campaign/queries";
+import type { IUser } from "~/modules/user";
+
 import { requireAuthSession } from "~/modules/auth";
 import { DeleteConfirmModal } from "~/modules/campaign/components/delete-confirm-modal";
 import { getCampaignById } from "~/modules/campaign/queries";
 import { getUserDisplayName, isAdmin } from "~/modules/user/helpers";
 import { json, useLoaderData } from "~/utils/superjson-remix";
-
-import type { LoaderFunction } from "@remix-run/node";
-import type { UserCampaign } from "~/modules/campaign/queries";
-import type { IUser } from "~/modules/user";
 
 type LoaderData = {
   campaign: UserCampaign;

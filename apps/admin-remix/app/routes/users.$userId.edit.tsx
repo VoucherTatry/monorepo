@@ -5,7 +5,7 @@ import { Button, Input } from "ui";
 
 import type { ActionFunction } from "@remix-run/node";
 import type { ZodError } from "zod";
-import type { UserData } from "~/routes/users/$userId";
+import type { UserData } from "~/modules/user";
 
 import { useMatchesData } from "~/hooks";
 import { requireAuthSession } from "~/modules/auth";
@@ -89,7 +89,7 @@ export default function EditProfile() {
 
   const fieldErrors = actionData?.errors?.formErrors.fieldErrors;
 
-  const profileData = useMatchesData<UserData>("routes/users/$userId");
+  const profileData = useMatchesData<UserData>("routes/users.$userId");
   const user = profileData?.user;
 
   return (
