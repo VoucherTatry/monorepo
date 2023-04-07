@@ -4,7 +4,6 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 
 import { WithSidebar } from "~/components/layouts/with-sidebar";
-import { useAppData } from "~/hooks/use-app-data";
 import { requireAuthSession } from "~/modules/auth";
 import { getGaurdedPath } from "~/utils/getGuardedPath";
 import { getCurrentPath } from "~/utils/http.server";
