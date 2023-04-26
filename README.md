@@ -1,17 +1,17 @@
-# Turborepo starter
+# VoucherTatry monorepo
 
-This is an official Yarn v1 starter turborepo.
+This is a monorepo for VoucherTatry project.
 
 ## What's inside?
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+This turborepo uses [pnpm](https://pnpm.io/) as a package manager. It includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org) app
-- `web`: another [Next.js](https://nextjs.org) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `apps/admin-remix`: a [RemixJS](https://remix.run/), [Supabase](https://supabase.com/) app to handle administration part of app (registration of merchants, adding new campaigns etc.)
+- `apps/website`: [Next.js](https://nextjs.org) landing page
+- `ui`: a stub React component library that can be shared across all applications
+- `eslint-config-custom`: `eslint` configurations for `postcss`, `tailwind`
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
@@ -26,14 +26,14 @@ This turborepo has some additional tools already setup for you:
 
 ## Setup
 
-This repository is used in the `npx create-turbo` command, and selected when choosing which package manager you wish to use with your monorepo (Yarn).
+This repository is used in the `npx create-turbo` command, and selected when choosing which package manager you wish to use with your monorepo (Pnpm).
 
 ### Build
 
 To build all apps and packages, run the following command:
 
 ```
-cd my-turborepo
+cd monorepo
 yarn run build
 ```
 
